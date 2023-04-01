@@ -142,6 +142,15 @@ Package initialization.
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 
+** SMARTPARENS
+- [[https://github.com/Fuco1/smartparens][Github]]
+
+#+BEGIN_SRC emacs-lisp
+        (use-package smartparens
+          :config (require 'smartparens-config)
+          :hook (prog-mode . smartparens-mode))
+#+END_SRC
+
 ** WHICH KEY
 
 #+BEGIN_SRC emacs-lisp
