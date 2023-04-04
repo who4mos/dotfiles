@@ -1,0 +1,9 @@
+
+* EMACS
+To use the configuration, you must first install the [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] font, then:
+
+: mkdir -p ~/.config/emacs
+: touch ~/.config/emacs/init.el
+: touch ~/.config/emacs/custom-vars.el
+
+Now open this file in emacs and enter ~M-x org-babel-tangle~ to write the source blocks in the init file.
