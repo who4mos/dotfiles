@@ -1,3 +1,4 @@
+
 #+TITLE: Emacs Configuration  
 #+PROPERTY: header-args :tangle ~/.config/emacs/init.el
 #+auto_tangle: t
@@ -218,6 +219,29 @@ Enable font ligatures.
   (use-package company)
   (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
+
+** SMART-MODE-LINE
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smart-mode-line
+    :config
+    (setq sml/theme 'respectful)
+    (sml/setup))
+#+END_SRC
+
+** MINIONS
+#+BEGIN_SRC emacs-lisp
+    (use-package minions
+      :config (minions-mode))
+#+END_SRC
+
+** NYAN-MODE
+#+BEGIN_SRC emacs-lisp
+      (use-package nyan-mode
+        :after (smart-mode-line minions)
+        :config (nyan-mode))
+#+END_SRC
+
 
 * ORG MODE
 
