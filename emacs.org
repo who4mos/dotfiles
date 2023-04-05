@@ -212,6 +212,13 @@ Enable font ligatures.
     :bind ("C-=" . er/expand-region))
 #+END_SRC
   
+** COMPANY
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company)
+  (add-hook 'after-init-hook 'global-company-mode)
+#+END_SRC
+
 * ORG MODE
 
 #+BEGIN_SRC emacs-lisp
