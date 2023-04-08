@@ -216,8 +216,8 @@ Enable font ligatures.
 ** COMPANY
 
 #+BEGIN_SRC emacs-lisp
-  (use-package company)
-  (add-hook 'after-init-hook 'global-company-mode)
+    (use-package company
+      :hook (after-init . global-company-mode))
 #+END_SRC
 
 ** SMART-MODE-LINE
@@ -241,7 +241,6 @@ Enable font ligatures.
         :after (smart-mode-line minions)
         :config (nyan-mode))
 #+END_SRC
-
 
 * ORG MODE
 
