@@ -1,40 +1,6 @@
-
 #+TITLE: Emacs Configuration  
 #+PROPERTY: header-args :tangle ~/.config/emacs/init.el
 #+auto_tangle: t
-
-* UI
-Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost all buffers.
-
-#+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-message t)
-
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-
-  (global-display-line-numbers-mode 1)
-  (dolist (mode '(org-mode-hook
-                  term-mode-hook
-                  shell-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode -1))))
-#+END_SRC
-
-** CLEANING INIT FILE
-Move custom vars to another file.
-
-#+BEGIN_SRC emacs-lisp
-  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
-  (load custom-file)
-#+END_SRC
-
-** FONT
-Font configuration.
-
-#+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :family "JetBrains Mono")
-#+END_SRC
 
 * Packages
 Package initialization.
@@ -60,119 +26,47 @@ Package initialization.
   (setq use-package-always-ensure t)
 #+END_SRC
 
-** MODUS THEME
-
-#+BEGIN_SRC emacs-lisp
-  (use-package modus-themes
-    :custom
-    (modus-themes-bold-constructs t)
-    (modus-themes-italic-constructs t)
-    (modus-themes-org-blocks 'gray-background)
-    :config
-    (load-theme 'modus-vivendi-tinted t))
-#+END_SRC
-
 ** TRY
 
 #+BEGIN_SRC emacs-lisp
   (use-package try)
 #+END_SRC
 
-** VERTICO
+* GENERAL
+** CLEANING INIT FILE
+Move custom vars to another file.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package vertico
-    :custom
-    (vertico-cycle t)
-    :config
-    (vertico-mode))
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file)
 #+END_SRC
 
-** MARGINALIA
+** UI
+Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost all buffers.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package marginalia
-    :after vertico
-    :init
-    (marginalia-mode 1))
+  (setq inhibit-startup-message t)
+
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+
+  (global-display-line-numbers-mode 1)
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode -1))))
 #+END_SRC
 
-** CONSULT
+*** FONT
+Font configuration.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package consult
-    :bind
-    ("M-y" . consult-yank-pop)
-    ("C-s" . consult-line))
+  (set-face-attribute 'default nil :family "JetBrains Mono")
 #+END_SRC
 
-** ORDERLESS
-
-#+BEGIN_SRC emacs-lisp
-  (use-package orderless
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-overrides '((file (styles basic partial-completion)))))
-#+END_SRC
-
-** HELPFUL
-
-#+BEGIN_SRC emacs-lisp
-  (use-package helpful
-    :bind
-    ([remap describe-function] . helpful-callable)
-    ([remap describe-variable] . helpful-variable)
-    ([remap describe-command] . helpful-command)
-    ([remap describe-symbol] . helpful-symbol)
-    ([remap describe-key] . helpful-key))
-#+END_SRC
-
-** AVY
-
-#+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :bind
-    ("M-s" . avy-goto-char)
-    ([remap goto-line] . avy-goto-line))
-#+END_SRC
-
-** RAINBOW DELIMITERS
-
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC
-
-** SMARTPARENS
-- [[https://github.com/Fuco1/smartparens][Github]]
-
-#+BEGIN_SRC emacs-lisp
-        (use-package smartparens
-          :config (require 'smartparens-config)
-          :hook (prog-mode . smartparens-mode))
-#+END_SRC
-
-** WHICH KEY
-
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :config
-    (which-key-mode 1))
-#+END_SRC
-
-** ACE WINDOW
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :bind
-    ([remap other-window] . ace-window)
-    :init
-    (custom-set-faces
-     '(aw-leading-char-face
-       ((t (:inherit ace-jump-face-foreground :height 1.5))))))
-#+END_SRC
-
-** LIGATURES
+*** LIGATURES
 Enable font ligatures.
 
 #+BEGIN_SRC emacs-lisp
@@ -196,13 +90,129 @@ Enable font ligatures.
         (global-ligature-mode t))
   #+END_SRC
 
-** FLYCHECK
-- [[https://www.flycheck.org/en/latest/languages.html#python][flycheck python]]
+*** THEME
+- [[https://github.com/protesilaos/modus-themes][Github]]
+  
+#+BEGIN_SRC emacs-lisp
+  (use-package modus-themes
+    :custom
+    (modus-themes-bold-constructs t)
+    (modus-themes-italic-constructs t)
+    (modus-themes-org-blocks 'gray-background)
+    :config
+    (load-theme 'modus-vivendi-tinted t))
+#+END_SRC
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package flycheck
-        :init (global-flycheck-mode))
-    #+END_SRC
+*** ALL THE ICONS
+You must run ~M-x all-the-icons-install-fonts~ after install the package.
+- [[https://github.com/domtronn/all-the-icons.el][Github]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :if (display-graphic-p))
+#+END_SRC
+
+** MODE LINE
+*** DOOM-MODELINE
+
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :custom
+    (doom-modeline-minor-modes t)
+    (doom-modeline-height 15)
+    :init (doom-modeline-mode 1))
+#+END_SRC
+
+*** MINIONS
+#+BEGIN_SRC emacs-lisp
+    (use-package minions
+      :config (minions-mode))
+#+END_SRC
+
+** COMPLETION
+*** VERTICO
+VERTical Interative COmpletion
+- [[https://github.com/minad/vertico][Github]]
+  
+#+BEGIN_SRC emacs-lisp
+  (use-package vertico
+    :custom
+    (vertico-cycle t)
+    :config
+    (vertico-mode))
+#+END_SRC
+
+*** MARGINALIA
+- [[https://github.com/minad/marginalia][Github]]
+  
+#+BEGIN_SRC emacs-lisp
+  (use-package marginalia
+    :after vertico
+    :init
+    (marginalia-mode 1))
+#+END_SRC
+
+*** CONSULT
+- [[https://github.com/minad/consult][Github]]
+  
+#+BEGIN_SRC emacs-lisp
+  (use-package consult
+    :bind
+    ("M-y" . consult-yank-pop)
+    ("C-s" . consult-line))
+#+END_SRC
+
+*** ORDERLESS
+- [[https://github.com/oantolin/orderless][Github]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+END_SRC
+
+** HELPERS
+*** HELPFUL
+
+#+BEGIN_SRC emacs-lisp
+  (use-package helpful
+    :bind
+    ([remap describe-function] . helpful-callable)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-symbol] . helpful-symbol)
+    ([remap describe-key] . helpful-key))
+#+END_SRC
+
+*** WHICH KEY
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :config
+    (which-key-mode 1))
+#+END_SRC
+
+** AVY
+
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :bind
+    ("M-s" . avy-goto-char)
+    ([remap goto-line] . avy-goto-line))
+#+END_SRC
+
+** ACE WINDOW
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :bind
+    ([remap other-window] . ace-window)
+    :init
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:inherit ace-jump-face-foreground :height 1.5))))))
+#+END_SRC
 
 ** EXPAND REGION
 - [[https://emacsrocks.com/e09.html][emacs rocks]]
@@ -212,34 +222,37 @@ Enable font ligatures.
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
 #+END_SRC
-  
+
+* DEVELOPMENT
+** RAINBOW DELIMITERS
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
+
+** SMARTPARENS
+
+- [[https://github.com/Fuco1/smartparens][Github]]
+
+#+BEGIN_SRC emacs-lisp
+        (use-package smartparens
+          :config (require 'smartparens-config)
+          :hook (prog-mode . smartparens-mode))
+#+END_SRC
+
+** FLYCHECK
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+        :init (global-flycheck-mode))
+    #+END_SRC
+
 ** COMPANY
 
 #+BEGIN_SRC emacs-lisp
     (use-package company
       :hook (after-init . global-company-mode))
-#+END_SRC
-
-** SMART-MODE-LINE
-
-#+BEGIN_SRC emacs-lisp
-  (use-package smart-mode-line
-    :config
-    (setq sml/theme 'respectful)
-    (sml/setup))
-#+END_SRC
-
-** MINIONS
-#+BEGIN_SRC emacs-lisp
-    (use-package minions
-      :config (minions-mode))
-#+END_SRC
-
-** NYAN-MODE
-#+BEGIN_SRC emacs-lisp
-      (use-package nyan-mode
-        :after (smart-mode-line minions)
-        :config (nyan-mode))
 #+END_SRC
 
 * ORG MODE
