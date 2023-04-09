@@ -1,4 +1,5 @@
 #+TITLE: Emacs Configuration  
+#+AUTHOR: who4mos
 #+PROPERTY: header-args :tangle ~/.config/emacs/init.el
 #+auto_tangle: t
 
@@ -113,7 +114,6 @@ You must run ~M-x all-the-icons-install-fonts~ after install the package.
   (use-package doom-modeline
     :custom
     (doom-modeline-minor-modes t)
-    (doom-modeline-height 15)
     :init (doom-modeline-mode 1))
 #+END_SRC
 
