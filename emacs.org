@@ -91,16 +91,10 @@ Enable font ligatures.
   #+END_SRC
 
 *** THEME
-- [[https://github.com/protesilaos/modus-themes][Github]]
   
 #+BEGIN_SRC emacs-lisp
-  (use-package modus-themes
-    :custom
-    (modus-themes-bold-constructs t)
-    (modus-themes-italic-constructs t)
-    (modus-themes-org-blocks 'gray-background)
-    :config
-    (load-theme 'modus-vivendi-tinted t))
+    (use-package doom-themes
+      :config (load-theme 'doom-dracula t))
 #+END_SRC
 
 *** ALL THE ICONS
