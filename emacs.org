@@ -16,7 +16,7 @@ Package initialization.
   (package-initialize)
 #+END_SRC
 
-** USE-PACKAGE
+** use-package
 
 #+BEGIN_SRC emacs-lisp
   (unless (package-installed-p 'use-package)
@@ -27,14 +27,14 @@ Package initialization.
   (setq use-package-always-ensure t)
 #+END_SRC
 
-** TRY
+** try
 
 #+BEGIN_SRC emacs-lisp
   (use-package try)
 #+END_SRC
 
-* GENERAL
-** CLEANING INIT FILE
+* General
+** Cleaning Init File
 Move custom vars to another file.
 
 #+BEGIN_SRC emacs-lisp
@@ -60,14 +60,14 @@ Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost 
     (add-hook mode (lambda () (display-line-numbers-mode -1))))
 #+END_SRC
 
-*** FONT
+*** Font
 Font configuration.
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil :family "JetBrains Mono")
 #+END_SRC
 
-*** LIGATURES
+*** Ligatures
 Enable font ligatures.
 
 #+BEGIN_SRC emacs-lisp
@@ -91,14 +91,14 @@ Enable font ligatures.
         (global-ligature-mode t))
   #+END_SRC
 
-*** THEME
+*** Theme
   
 #+BEGIN_SRC emacs-lisp
     (use-package doom-themes
       :config (load-theme 'doom-dracula t))
 #+END_SRC
 
-*** ALL THE ICONS
+*** all the icons
 You must run ~M-x all-the-icons-install-fonts~ after install the package.
 - [[https://github.com/domtronn/all-the-icons.el][Github]]
 
@@ -107,8 +107,18 @@ You must run ~M-x all-the-icons-install-fonts~ after install the package.
     :if (display-graphic-p))
 #+END_SRC
 
-** MODE LINE
-*** DOOM-MODELINE
+**** ALL THE ICONS COMPLETION
+Add icons to completion candidates.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons-completion
+    :config
+    (all-the-icons-completion-mode))
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+#+END_SRC
+
+** Mode Line
+*** doom-modeline
 
 #+BEGIN_SRC emacs-lisp
   (use-package doom-modeline
@@ -117,14 +127,14 @@ You must run ~M-x all-the-icons-install-fonts~ after install the package.
     :init (doom-modeline-mode 1))
 #+END_SRC
 
-*** MINIONS
+*** minions
 #+BEGIN_SRC emacs-lisp
     (use-package minions
       :config (minions-mode))
 #+END_SRC
 
-** MINIBUFFER
-*** VERTICO
+** Minibuffer
+*** vertico
 VERTICO (VERTical Interative COmpletion) provides a minimalist vertical completion UI based on the default completion system.
 
 - [[https://github.com/minad/vertico][Github]]
@@ -137,7 +147,7 @@ VERTICO (VERTical Interative COmpletion) provides a minimalist vertical completi
     (vertico-mode))
 #+END_SRC
 
-*** MARGINALIA
+*** marginalia
 Show documentation of functions in ~M-x~ and file attributes in ~C-x C-f~. 
 
 - [[https://github.com/minad/marginalia]]
@@ -149,15 +159,7 @@ Show documentation of functions in ~M-x~ and file attributes in ~C-x C-f~.
     (marginalia-mode 1))
 #+END_SRC
 
-**** ALL THE ICONS COMPLETION
-Add icons to completion candidates in ~C-c C-f~.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons-completion)
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
-#+END_SRC
-
-*** CONSULT
+*** consult
 Provides search and navigation commands based on the default completion system.
 
 - [[https://github.com/minad/consult]]
@@ -169,7 +171,7 @@ Provides search and navigation commands based on the default completion system.
     ("C-s" . consult-line))
 #+END_SRC
 
-*** ORDERLESS
+*** orderless
 - [[https://github.com/oantolin/orderless][Github]]
 
 #+BEGIN_SRC emacs-lisp
@@ -180,8 +182,8 @@ Provides search and navigation commands based on the default completion system.
     (completion-category-overrides '((file (styles . (partial-completion))))))
       #+END_SRC
 
-** HELPERS
-*** HELPFUL
+** Helpers
+*** helpful
 
 #+BEGIN_SRC emacs-lisp
   (use-package helpful
@@ -193,7 +195,7 @@ Provides search and navigation commands based on the default completion system.
     ([remap describe-key] . helpful-key))
 #+END_SRC
 
-*** WHICH KEY
+*** which key
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -201,7 +203,7 @@ Provides search and navigation commands based on the default completion system.
     (which-key-mode 1))
 #+END_SRC
 
-** AVY
+** avy
 
 #+BEGIN_SRC emacs-lisp
   (use-package avy
@@ -210,7 +212,19 @@ Provides search and navigation commands based on the default completion system.
     ([remap goto-line] . avy-goto-line))
 #+END_SRC
 
-** ACE WINDOW
+** multiple cursors
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :bind
+    ("C-S-c C-S-c" . mc/edit-lines)
+    ("C-S-c C-e" . mc/edit-ends-of-lines)
+    ("C-S-c C-a" . mc/edit-beginnings-of-lines)
+    ("C->" . mc/mark-next-like-this)
+    ("C-<" . mc/mark-previous-like-this))
+#+END_SRC
+
+** ace window
 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
@@ -222,7 +236,7 @@ Provides search and navigation commands based on the default completion system.
        ((t (:inherit ace-jump-face-foreground :height 1.5))))))
 #+END_SRC
 
-** EXPAND REGION
+** expand region
 - [[https://emacsrocks.com/e09.html][emacs rocks]]
 - [[https://github.com/magnars/expand-region.el][github]]
 
@@ -232,14 +246,14 @@ Provides search and navigation commands based on the default completion system.
 #+END_SRC
 
 * DEVELOPMENT
-** RAINBOW DELIMITERS
+** rainbow delimiters
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 
-** SMARTPARENS
+** smartparens
 
 - [[https://github.com/Fuco1/smartparens][Github]]
 
@@ -249,14 +263,14 @@ Provides search and navigation commands based on the default completion system.
           :hook (prog-mode . smartparens-mode))
 #+END_SRC
 
-** FLYCHECK
+** flycheck
 
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
         :init (global-flycheck-mode))
     #+END_SRC
 
-** CORFU
+** corfu
 
 #+BEGIN_SRC emacs-lisp
     (use-package corfu
@@ -270,7 +284,7 @@ Provides search and navigation commands based on the default completion system.
       (global-corfu-mode))
 #+END_SRC
 
-*** KIND-ICONS
+*** kind-icons
 
 #+BEGIN_SRC emacs-lisp
   (use-package kind-icon
@@ -281,13 +295,13 @@ Provides search and navigation commands based on the default completion system.
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+END_SRC
 
-** EGLOT
+** eglot
 
 #+BEGIN_SRC emacs-lisp
   (use-package eglot)
 #+END_SRC
 
-* ORG MODE
+* Org Mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
@@ -299,7 +313,7 @@ Provides search and navigation commands based on the default completion system.
     (org-mode . org-indent-mode))
 #+END_SRC
 
-** ORG AUTO TANGLE
+** org auto tangle
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-auto-tangle
@@ -307,7 +321,7 @@ Provides search and navigation commands based on the default completion system.
     :hook (org-mode . org-auto-tangle-mode))
 #+END_SRC
 
-** ORG SUPERSTAR
+** org superstar
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-superstar
@@ -317,9 +331,9 @@ Provides search and navigation commands based on the default completion system.
     (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 #+END_SRC
 
-* KEY BINDINGS
+* Key Bindings
 
-** REVERT-BUFFER
+** revert-buffer
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<f5>") 'revert-buffer)
