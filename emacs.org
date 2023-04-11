@@ -56,7 +56,8 @@ Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost 
   (dolist (mode '(org-mode-hook
                   term-mode-hook
                   shell-mode-hook
-                  eshell-mode-hook))
+                  eshell-mode-hook
+                  vterm-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode -1))))
 #+END_SRC
 
