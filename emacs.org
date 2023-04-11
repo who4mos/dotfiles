@@ -339,3 +339,12 @@ Provides search and navigation commands based on the default completion system.
   (global-set-key (kbd "<f5>") 'revert-buffer)
 #+END_SRC
 
+* Terminal
+** vterm
+
+#+BEGIN_SRC emacs-lisp
+  (use-package vterm
+    :custom
+    (vterm-clear-scrollback-when-clearing t))
+#+END_SRC
+
