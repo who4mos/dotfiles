@@ -65,7 +65,7 @@ Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost 
 Font configuration.
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :family "JetBrains Mono")
+  (set-face-attribute 'default nil :family "JetBrains Mono" :height 110)
 #+END_SRC
 
 *** Ligatures
@@ -341,11 +341,22 @@ Provides search and navigation commands based on the default completion system.
 #+END_SRC
 
 * Terminal
+
 ** vterm
 
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
     :custom
     (vterm-clear-scrollback-when-clearing t))
+#+END_SRC
+
+*** multi vterm
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multi-vterm
+    :custom
+    (multi-vterm-dedicated-window-height-percent 30)
+    :bind
+    ("C-\"" . multi-vterm-dedicated-toggle))
 #+END_SRC
 
