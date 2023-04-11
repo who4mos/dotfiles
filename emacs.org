@@ -168,8 +168,9 @@ Provides search and navigation commands based on the default completion system.
   (use-package orderless
     :custom
     (completion-styles '(orderless basic))
-    (completion-category-overrides '((file (styles basic partial-completion)))))
-#+END_SRC
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles . (partial-completion))))))
+      #+END_SRC
 
 ** HELPERS
 *** HELPFUL
@@ -247,11 +248,35 @@ Provides search and navigation commands based on the default completion system.
         :init (global-flycheck-mode))
     #+END_SRC
 
-** COMPANY
+** CORFU
 
 #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :hook (after-init . global-company-mode))
+    (use-package corfu
+      :custom
+      (corfu-cycle t)
+      (corfu-auto t)
+      :bind
+      (:map corfu-map
+            ("C-f" . corfu-insert))
+      :init
+      (global-corfu-mode))
+#+END_SRC
+
+*** KIND-ICONS
+
+#+BEGIN_SRC emacs-lisp
+  (use-package kind-icon
+    :after corfu
+    :custom
+    (kind-icon-default-face 'corfu-default)
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+#+END_SRC
+
+** EGLOT
+
+#+BEGIN_SRC emacs-lisp
+  (use-package eglot)
 #+END_SRC
 
 * ORG MODE
