@@ -149,6 +149,14 @@ Show documentation of functions in ~M-x~ and file attributes in ~C-x C-f~.
     (marginalia-mode 1))
 #+END_SRC
 
+**** ALL THE ICONS COMPLETION
+Add icons to completion candidates in ~C-c C-f~.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons-completion)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+#+END_SRC
+
 *** CONSULT
 Provides search and navigation commands based on the default completion system.
 
