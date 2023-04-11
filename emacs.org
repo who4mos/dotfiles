@@ -123,9 +123,10 @@ You must run ~M-x all-the-icons-install-fonts~ after install the package.
       :config (minions-mode))
 #+END_SRC
 
-** COMPLETION
+** MINIBUFFER
 *** VERTICO
-VERTical Interative COmpletion
+VERTICO (VERTical Interative COmpletion) provides a minimalist vertical completion UI based on the default completion system.
+
 - [[https://github.com/minad/vertico][Github]]
   
 #+BEGIN_SRC emacs-lisp
@@ -137,8 +138,10 @@ VERTical Interative COmpletion
 #+END_SRC
 
 *** MARGINALIA
-- [[https://github.com/minad/marginalia][Github]]
-  
+Show documentation of functions in ~M-x~ and file attributes in ~C-x C-f~. 
+
+- [[https://github.com/minad/marginalia]]
+    
 #+BEGIN_SRC emacs-lisp
   (use-package marginalia
     :after vertico
@@ -147,7 +150,9 @@ VERTical Interative COmpletion
 #+END_SRC
 
 *** CONSULT
-- [[https://github.com/minad/consult][Github]]
+Provides search and navigation commands based on the default completion system.
+
+- [[https://github.com/minad/consult]]
   
 #+BEGIN_SRC emacs-lisp
   (use-package consult
