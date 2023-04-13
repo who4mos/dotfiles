@@ -95,8 +95,10 @@ Enable font ligatures.
 *** Theme
   
 #+BEGIN_SRC emacs-lisp
-    (use-package doom-themes
-      :config (load-theme 'doom-dracula t))
+  (use-package modus-themes
+    :custom
+    (modus-themes-org-blocks 'gray-background)
+    :config (load-theme 'modus-vivendi-tinted t))
 #+END_SRC
 
 *** all the icons
@@ -116,6 +118,13 @@ Add icons to completion candidates.
     :config
     (all-the-icons-completion-mode))
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+#+END_SRC
+
+*** emojify
+
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :init (global-emojify-mode))
 #+END_SRC
 
 ** Mode Line
@@ -246,7 +255,7 @@ Provides search and navigation commands based on the default completion system.
     :bind ("C-=" . er/expand-region))
 #+END_SRC
 
-* DEVELOPMENT
+* Development
 ** rainbow delimiters
 
 #+BEGIN_SRC emacs-lisp
