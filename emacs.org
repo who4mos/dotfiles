@@ -234,6 +234,12 @@ Provides search and navigation commands based on the default completion system.
     ("C-<" . mc/mark-previous-like-this))
 #+END_SRC
 
+** iedit
+
+#+BEGIN_SRC emacs-lisp
+  (use-package iedit)
+#+END_SRC
+
 ** ace window
 
 #+BEGIN_SRC emacs-lisp
@@ -283,15 +289,19 @@ Provides search and navigation commands based on the default completion system.
 ** corfu
 
 #+BEGIN_SRC emacs-lisp
-    (use-package corfu
-      :custom
-      (corfu-cycle t)
-      (corfu-auto t)
-      :bind
-      (:map corfu-map
-            ("C-f" . corfu-insert))
-      :init
-      (global-corfu-mode))
+  (use-package corfu
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    :bind
+    (:map corfu-map
+          ("C-f" . corfu-insert)
+          ("M-p" . corfu-popupinfo-scroll-down)
+          ("M-n" . corfu-popupinfo-scroll-up))
+    :init
+    (global-corfu-mode)
+    :hook
+    (corfu-mode . corfu-popupinfo-mode))
 #+END_SRC
 
 *** kind-icons
