@@ -245,6 +245,7 @@ Provides search and navigation commands based on the default completion system.
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
     :bind
+    ("M-o" . other-window)
     ([remap other-window] . ace-window)
     :init
     (custom-set-faces
@@ -319,6 +320,37 @@ Provides search and navigation commands based on the default completion system.
 
 #+BEGIN_SRC emacs-lisp
   (use-package eglot)
+#+END_SRC
+
+** C indentation
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default c-basic-offset 4)
+#+END_SRC
+
+** Emmet
+
+#+BEGIN_SRC emacs-lisp
+  (use-package emmet-mode)
+#+END_SRC
+
+** web-mode
+
+#+BEGIN_SRC emacs-lisp
+    (use-package web-mode
+      :init
+      (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+      :config
+      (defun my-web-mode-hook ()
+        "Hooks for Web mode."
+        (setq web-mode-markup-indent-offset 2)
+        (setq web-mode-css-indent-offset 2)
+        (setq web-mode-code-indent-offset 2))
+      :hook
+      (web-mode . my-web-mode-hook))
 #+END_SRC
 
 * Org Mode
