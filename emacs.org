@@ -164,7 +164,8 @@ Provides search and navigation commands based on the default completion system.
     :bind
     ("M-y" . consult-yank-pop)
     ("C-s" . consult-line)
-    ("C-x b" . consult-buffer))
+    ("C-x b" . consult-buffer)
+    ([remap goto-line] . consult-goto-line))
 #+END_SRC
 
 *** orderless
@@ -204,8 +205,7 @@ Provides search and navigation commands based on the default completion system.
 #+BEGIN_SRC emacs-lisp
   (use-package avy
     :bind
-    ("M-s" . avy-goto-char)
-    ([remap goto-line] . avy-goto-line))
+    ("M-s" . avy-goto-char))
 #+END_SRC
 
 ** multiple cursors
@@ -312,9 +312,11 @@ Provides search and navigation commands based on the default completion system.
     :config
     (add-to-list 'eglot-server-programs '(c-mode . ("clangd")))
     (add-to-list 'eglot-server-programs '(c++-mode . ("clangd")))
+    (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
     :hook
     (c-mode . eglot-ensure)
-    (c++-mode . eglot-ensure))
+    (c++-mode . eglot-ensure)
+    (python-mode . eglot-ensure))
 #+END_SRC
 
 ** yasnippet
@@ -367,6 +369,22 @@ Provides search and navigation commands based on the default completion system.
     :hook
     (org-mode . visual-line-mode)
     (org-mode . org-indent-mode))
+#+END_SRC
+
+** org-roam
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :custom
+    (make-directory "~/golden/roam-notes")
+    (org-roam-directory "~/golden/roam-notes")
+    :bind
+    ("C-c n l" . org-roam-buffer-toggle)
+    ("C-c n f" . org-roam-node-find)
+    ("C-c n g" . org-roam-graph)
+    ("C-c n i" . org-roam-node-insert)
+    :config
+    (org-roam-setup))
 #+END_SRC
 
 ** org auto tangle
