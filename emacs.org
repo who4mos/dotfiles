@@ -33,6 +33,20 @@ Package initialization.
   (use-package try)
 #+END_SRC
 
+* Libraries
+
+** websocket
+
+#+BEGIN_SRC emacs-lisp
+  (use-package websocket)
+#+END_SRC
+
+** f
+
+#+BEGIN_SRC emacs-lisp
+  (use-package f)
+#+END_SRC
+
 * General
 ** Cleaning Init File
 Move custom vars to another file.
@@ -107,8 +121,12 @@ Enable font ligatures.
     :custom
     (modus-themes-org-blocks 'gray-background)
     (modus-themes-bold-constructs t)
-    (modus-italic-bold-constructs t)
-    :config (load-theme 'modus-vivendi-tinted t))
+    (modus-themes-italic-bold-constructs t)
+    (modus-themes-common-palette-overrides
+     '((border-mode-line-active unspecified)
+       (border-mode-line-inactive unspecified)))
+    :config
+    (load-theme 'modus-vivendi t))
 #+END_SRC
 
 *** emojify
@@ -125,8 +143,6 @@ Enable font ligatures.
     (use-package minions
       :config (minions-mode))
 #+END_SRC
-
-** 
 
 ** Minibuffer
 *** vertico
@@ -200,15 +216,9 @@ Provides search and navigation commands based on the default completion system.
     (which-key-mode 1))
 #+END_SRC
 
-** avy
+** Editing
 
-#+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :bind
-    ("M-s" . avy-goto-char))
-#+END_SRC
-
-** multiple cursors
+*** multiple cursors
 
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
@@ -220,10 +230,28 @@ Provides search and navigation commands based on the default completion system.
     ("C-<" . mc/mark-previous-like-this))
 #+END_SRC
 
-** iedit
+*** iedit
 
 #+BEGIN_SRC emacs-lisp
   (use-package iedit)
+#+END_SRC
+
+*** expand region
+
+- [[https://emacsrocks.com/e09.html][emacs rocks]]
+- [[https://github.com/magnars/expand-region.el][github]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :bind ("C-=" . er/expand-region))
+#+END_SRC
+
+** avy
+
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :bind
+    ("M-s" . avy-goto-char))
 #+END_SRC
 
 ** ace window
@@ -237,15 +265,6 @@ Provides search and navigation commands based on the default completion system.
     (custom-set-faces
      '(aw-leading-char-face
        ((t (:inherit ace-jump-face-foreground :height 1.5))))))
-#+END_SRC
-
-** expand region
-- [[https://emacsrocks.com/e09.html][emacs rocks]]
-- [[https://github.com/magnars/expand-region.el][github]]
-
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :bind ("C-=" . er/expand-region))
 #+END_SRC
 
 * Development
@@ -334,10 +353,10 @@ Provides search and navigation commands based on the default completion system.
   (setq-default c-basic-offset 4)
 #+END_SRC
 
-** Emmet
+** Python indentation
 
 #+BEGIN_SRC emacs-lisp
-  (use-package emmet-mode)
+  (setq-default python-indent-offset 4)
 #+END_SRC
 
 ** web-mode
@@ -359,13 +378,35 @@ Provides search and navigation commands based on the default completion system.
       (web-mode . my-web-mode-hook))
 #+END_SRC
 
+** emmet
+
+#+begin_SRC emacs-lisp
+  (use-package emmet-mode
+    :custom
+    (emmet-move-cursor-between-quotes t)
+    (emmet-self-closing-tag-style "")
+    :hook
+    (web-mode . emmet-mode))
+#+END_SRC
+
+** simple-httpd
+
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd)
+#+END_SRC
+
 * Org Mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :custom
-    (org-hide-emphasis-markers t) 
+    (org-hide-emphasis-markers t)
+    (org-log-done 'time)
     (org-ellipsis " ▾")
+    (org-directory "~/Documents/org")
+    (org-agenda-files (list (concat org-directory "/agenda.org")))
+    :bind
+    ("C-c a" . org-agenda)
     :hook
     (org-mode . visual-line-mode)
     (org-mode . org-indent-mode))
@@ -376,18 +417,31 @@ Provides search and navigation commands based on the default completion system.
 #+BEGIN_SRC emacs-lisp
   (use-package org-roam
     :custom
-    (make-directory "~/golden/roam-notes")
-    (org-roam-directory "~/golden/roam-notes")
+    (make-directory "~/Documents/org-roam")
+    (org-roam-directory (file-truename "~/Documents/org-roam"))
+    (org-roam-node-display-template
+           (concat "${title:*} "
+                   (propertize "${tags:10}" 'face 'org-tag)))
     :bind
     ("C-c n l" . org-roam-buffer-toggle)
     ("C-c n f" . org-roam-node-find)
     ("C-c n g" . org-roam-graph)
     ("C-c n i" . org-roam-node-insert)
+    ("C-c n c" . org-roam-capture)
     :config
-    (org-roam-setup))
+    (org-roam-db-autosync-mode))
 #+END_SRC
 
-** org auto tangle
+** org-roam-ui
+
+~org-roam-ui~ requires Emacs >= 27 and the following packages: [[org-roam]], [[websocket]], [[simple-httpd]], and [[f]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam-ui
+    :after org-roam)
+#+END_SRC
+
+** org-auto-tangle
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-auto-tangle
@@ -395,7 +449,7 @@ Provides search and navigation commands based on the default completion system.
     :hook (org-mode . org-auto-tangle-mode))
 #+END_SRC
 
-** org superstar
+** org-superstar
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-superstar
