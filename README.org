@@ -3,7 +3,7 @@
 
 ** Requirements
 
-+ [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] font
++ [[https://github.com/be5invis/Iosevka][Iosevka]] font
 + cmake (>= 3.11) to install vterm
 
 : mkdir -p ~/.config/emacs
