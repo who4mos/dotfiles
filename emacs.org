@@ -322,10 +322,12 @@ Provides search and navigation commands based on the default completion system.
     (add-to-list 'eglot-server-programs '(c-mode . ("clangd")))
     (add-to-list 'eglot-server-programs '(c++-mode . ("clangd")))
     (add-to-list 'eglot-server-programs '(python-mode . ("jedi-language-server")))
+    (add-to-list 'eglot-server-programs '(dockerfile-mode . ("docker-langserver"  "--stdio")))
     :hook
     (c-mode . eglot-ensure)
     (c++-mode . eglot-ensure)
-    (python-mode . eglot-ensure))
+    (python-mode . eglot-ensure)
+    (dockerfile-mode . eglot-ensure))
 #+END_SRC
 
 ** yasnippet
@@ -383,6 +385,12 @@ Provides search and navigation commands based on the default completion system.
 
 #+BEGIN_SRC emacs-lisp
   (use-package simple-httpd)
+#+END_SRC
+
+** dockerfile-mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dockerfile-mode)
 #+END_SRC
 
 * Org Mode
