@@ -79,7 +79,8 @@ Disable wellcome screen, scroll, tool, and menu bars, and shows lines on almost 
                   term-mode-hook
                   shell-mode-hook
                   eshell-mode-hook
-                  vterm-mode-hook))
+                  vterm-mode-hook
+                  treemacs-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode -1))))
 #+END_SRC
 
@@ -175,6 +176,7 @@ Provides search and navigation commands based on the default completion system.
 #+END_SRC
 
 *** orderless
+
 - [[https://github.com/oantolin/orderless][Github]]
 
 #+BEGIN_SRC emacs-lisp
@@ -183,7 +185,7 @@ Provides search and navigation commands based on the default completion system.
     (completion-styles '(orderless basic))
     (completion-category-defaults nil)
     (completion-category-overrides '((file (styles . (partial-completion))))))
-      #+END_SRC
+#+END_SRC
 
 ** Helpers
 *** helpful
@@ -290,6 +292,7 @@ Provides search and navigation commands based on the default completion system.
     (corfu-cycle t)
     (corfu-auto t)
     (corfu-auto-prefix 2)
+    (corfu-popupinfo-delay '(1.0 . 0.0))
     :bind
     (:map corfu-map
           ("TAB" . corfu-insert)
@@ -391,6 +394,32 @@ Provides search and navigation commands based on the default completion system.
 
 #+BEGIN_SRC emacs-lisp
   (use-package dockerfile-mode)
+#+END_SRC
+
+** projectile
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :bind
+    ("C-c p" . projectile-command-map)
+    :config
+    (projectile-mode 1))
+#+END_SRC
+
+** treemacs
+
+#+BEGIN_SRC emacs-lisp
+  (use-package treemacs
+    :bind
+    ("M-0"   . treemacs-select-window)
+    ("C-c t" . treemacs))
+#+END_SRC
+
+*** treemacs-projectile
+
+#+BEGIN_SRC emacs-lisp
+  (use-package treemacs-projectile
+    :after (treemacs projectile))
 #+END_SRC
 
 * Org Mode
