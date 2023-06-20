@@ -56,6 +56,12 @@ Move custom vars to another file.
   (load custom-file)
 #+END_SRC
 
+** warning minimal level
+
+#+BEGIN_SRC emacs-lisp
+  (setq warning-minimal-level :emergency)
+#+END_SRC
+
 ** Dired
 
 #+BEGIN_SRC emacs-lisp
@@ -420,6 +426,12 @@ Provides search and navigation commands based on the default completion system.
 #+BEGIN_SRC emacs-lisp
   (use-package treemacs-projectile
     :after (treemacs projectile))
+#+END_SRC
+
+** nix-mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package nix-mode)
 #+END_SRC
 
 * Org Mode
