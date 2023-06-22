@@ -4,6 +4,7 @@
 #+auto_tangle: t
 
 * Packages
+
 Package initialization.
 
 #+BEGIN_SRC emacs-lisp
@@ -48,6 +49,7 @@ Package initialization.
 #+END_SRC
 
 * General
+
 ** Cleaning Init File
 Move custom vars to another file.
 
@@ -56,10 +58,10 @@ Move custom vars to another file.
   (load custom-file)
 #+END_SRC
 
-** warning minimal level
+** Disable Warnings 
 
 #+BEGIN_SRC emacs-lisp
-  (setq warning-minimal-level :emergency)
+  (setq native-comp-async-report-warnings-errors nil)
 #+END_SRC
 
 ** Dired
