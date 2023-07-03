@@ -368,7 +368,6 @@ Provides search and navigation commands based on the default completion system.
     (use-package web-mode
       :init
       (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-      (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
       :config
@@ -389,7 +388,8 @@ Provides search and navigation commands based on the default completion system.
     (emmet-move-cursor-between-quotes t)
     (emmet-self-closing-tag-style "")
     :hook
-    (web-mode . emmet-mode))
+    (web-mode  . emmet-mode)
+    (css-mode . emmet-mode))
 #+END_SRC
 
 ** simple-httpd
