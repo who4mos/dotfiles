@@ -1,0 +1,5 @@
+* Requirements
+
+- emacs version >= 29
+- nerd fonts (hack)
+  

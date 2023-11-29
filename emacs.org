@@ -1,0 +1,531 @@
+#+TITLE: Who4mos`s Emacs Configuration
+#+AUTHOR: who4mos
+#+STARTUP: overview
+#+PROPERTY: header-args :tangle ~/.config/emacs/init.el
+
+
+* TOC :TOC:
+- [[#packages][Packages]]
+  - [[#elpaca][Elpaca]]
+  - [[#use-package][use-package]]
+  - [[#try][try]]
+- [[#ui][UI]]
+  - [[#theme][Theme]]
+  - [[#font][Font]]
+  - [[#cleaning-interface][Cleaning Interface]]
+  - [[#line-numbers][Line Numbers]]
+  - [[#helpful][helpful]]
+  - [[#dired][dired]]
+  - [[#mode-line][Mode Line]]
+- [[#key-bindings][Key Bindings]]
+  - [[#revert-buffer][revert buffer]]
+  - [[#which-key][which-key]]
+- [[#navigation][Navigation]]
+  - [[#ace-window][ace-window]]
+  - [[#avy][avy]]
+  - [[#multiple-cursors][multiple-cursors]]
+  - [[#expand-region][expand-region]]
+- [[#minibuffer][Minibuffer]]
+  - [[#vertico][vertico]]
+  - [[#consult][consult]]
+- [[#mode-line-1][Mode-line]]
+  - [[#nyan-mode][nyan-mode]]
+- [[#fuzzy][Fuzzy]]
+  - [[#orderless][Orderless]]
+- [[#programming][Programming]]
+  - [[#magit][Magit]]
+  - [[#eglot][Eglot]]
+  - [[#corfu][corfu]]
+  - [[#flycheck][flycheck]]
+  - [[#yasnippet][yasnippet]]
+  - [[#yasnippet-snippets][yasnippet-snippets]]
+  - [[#js2-mode][js2-mode]]
+  - [[#smartparens][smartparens]]
+  - [[#rainbow-delimiters][rainbow-delimiters]]
+  - [[#lua-mode][lua-mode]]
+- [[#org-mode][Org-mode]]
+  - [[#beautifying-org][Beautifying org]]
+  - [[#org-tempo][org-tempo]]
+  - [[#org-modern][org-modern]]
+  - [[#toc-org][toc-org]]
+- [[#pdf-tools][PDF Tools]]
+
+* Packages
+
+** Elpaca
+
+[[https://github.com/progfolio/elpaca][Elpaca]] is a better emacs package manager.
+
+To use it, first we need to disable the package.el before the init file is loaded.
+
+#+begin_src emacs-lisp :tangle ~/.config/emacs/early-init.el
+  (setq package-enable-at-startup nil)
+#+end_src
+
+Then, build and activate elpaca.
+
+#+begin_src emacs-lisp
+  (defvar elpaca-installer-version 0.6)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+				:ref nil
+				:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+				:build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+	 (build (expand-file-name "elpaca/" elpaca-builds-directory))
+	 (order (cdr elpaca-order))
+	 (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+	  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		   ((zerop (call-process "git" nil buffer t "clone"
+					 (plist-get order :repo) repo)))
+		   ((zerop (call-process "git" nil buffer t "checkout"
+					 (or (plist-get order :ref) "--"))))
+		   (emacs (concat invocation-directory invocation-name))
+		   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+					 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		   ((require 'elpaca))
+		   ((elpaca-generate-autoloads "elpaca" repo)))
+	      (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+	    (error "%s" (with-current-buffer buffer (buffer-string))))
+	((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+#+end_src
+
+** use-package
+
+[[https://github.com/jwiegley/use-package][use-package]] is used to configure and load packages.
+
+#+begin_src emacs-lisp
+  (elpaca elpaca-use-package
+    ;; Enable :elpaca use-package keyword.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified.
+    (setq elpaca-use-package-by-default t))
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
+#+end_src
+
+** try
+
+[[https://github.com/larstvei/Try][try]] is a package to try emacs packages.
+
+#+begin_src emacs-lisp
+  (use-package try)
+#+end_src
+
+* UI
+
+** Theme
+
+#+begin_src emacs-lisp
+  (use-package modus-themes
+    :custom
+    (modus-themes-italic-constructs t)
+    (modus-themes-bold-constructs t)
+    (modus-themes-org-blocks nil)
+    :config
+    (load-theme 'modus-vivendi t))
+#+end_src
+
+** Font
+
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil :font "Hack Nerd Font" :height 120)
+#+end_src
+
+*** nerd-icons
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :custom
+    (nerd-icons-font-family "Hack Nerd Font"))
+#+end_src
+
+** Cleaning Interface
+
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+** Line Numbers
+
+#+begin_src emacs-lisp
+  (add-hook 'display-line-numbers-mode 'prog-mode)
+#+end_src
+
+** helpful
+
+[[https://github.com/Wilfred/helpful][helpful]] provides more information to emacs built-in help buffers.
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :bind
+    ([remap describe-function] . helpful-callable)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-key] . helpful-key)
+    ([remap describe-command] . helpful-command)
+    )
+#+end_src
+
+** dired
+
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-agho --group-directories-first")
+#+end_src
+
+*** nerd-icons-dired
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+** Mode Line
+
+*** minions
+
+#+begin_src emacs-lisp
+  (use-package minions
+    :init
+    (minions-mode))
+#+end_src
+
+* Key Bindings
+
+** revert buffer
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<f5>") 'revert-buffer)
+#+end_src
+
+** which-key
+
+[[https://github.com/justbur/emacs-which-key][which-key]] is a package that displays the key bindings following the entered input so far.
+
+#+begin_src emacs-lisp
+      (use-package which-key
+	:config
+	(which-key-mode))
+#+end_src
+
+* Navigation
+
+** ace-window
+
+[[https://github.com/abo-abo/ace-window][ace-window]] is a package that provides a better way to select windows.
+
+#+begin_src emacs-lisp
+  (global-unset-key (kbd "C-x o"))
+
+  (use-package ace-window
+    :bind
+    ("M-o" . ace-window))
+#+end_src
+
+** avy
+
+[[https://github.com/abo-abo/avy][avy]] is a package that allows you to jump to text choosing between characters.
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :bind
+    ("M-s" . avy-goto-char))
+#+end_src
+
+** multiple-cursors
+
+[[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] provides multiple cursors.
+
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind
+    ("C-S-c C-S-c" . mc/edit-lines)
+    ("C-S-c C-e" . mc/edit-ends-of-lines)
+    ("C-S-c C-a" . mc/edit-beginnings-of-lines)
+    ("C->" . mc/mark-next-like-this)
+    ("C-<" . mc/mark-previous-like-this))
+#+end_src
+
+** expand-region
+
+[[https://github.com/magnars/expand-region.el][expand-region]] is a package that allows you to increases the selected region by semantic units.
+
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :bind ("C-=" . er/expand-region))
+#+end_src
+
+* Minibuffer
+
+** vertico
+
+[[https://github.com/minad/vertico][vertico]] (VERTIcal Interactive COmpletion) provides a completion UI based on the bult-in completion system.
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :custom
+    (vertico-cycle t)
+    :init
+    (vertico-mode))
+#+end_src
+
+*** marginalia
+
+[[https://github.com/minad/marginalia][marginalia]] is a package that provides marks and annotations to minibuffer candidates.
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :init
+    (marginalia-mode))
+#+end_src
+
+** consult
+
+[[https://github.com/minad/consult][consult]] provides search and navigation commands based in the built-in complete system.
+
+#+begin_src emacs-lisp
+  (use-package consult
+    :bind
+    ([remap isearch-forward] . consult-line)
+    ([remap imenu] . consult-imenu)
+    ([remap goto-line] . consult-goto-line)
+    ("C-c M-x" . consult-mode-command)
+    ("C-c i" . consult-info)
+    ("C-x b" . consult-buffer)
+    ("M-y" . consult-yank-pop)
+    :config
+    (add-hook 'org-mode-hook
+	      (lambda ()
+		(local-set-key (kbd "M-g i") #'consult-org-heading))))
+#+end_src
+
+* Mode-line 
+
+** nyan-mode
+
+#+begin_src emacs-lisp
+  (use-package nyan-mode
+    :custom
+    (nyan-animate-nyancat t)
+    (nyan-wavy-trail t)
+    :config
+    (nyan-mode))
+#+end_src
+
+* Fuzzy
+
+** Orderless
+
+[[https://github.com/oantolin/orderless][orderless]] is package that provides a completion style that divides the pattern into space-separated components.
+
+#+begin_src emacs-lisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+* Programming
+
+** Magit
+
+[[https://github.com/magit/magit][Magit]] is a git porcelain inside emacs.
+
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+** Eglot
+
+[[https://github.com/joaotavora/eglot][Eglot]] is the emacs built-in [[https://en.wikipedia.org/wiki/Language_Server_Protocol][LSP]] client.
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+	       '(python-mode . ("pyright-langserver" "--stdio"))
+	       '(js-mode . ("typescript-language-server" "--stdio"))))
+
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'js-mode-hook 'eglot-ensure)
+#+end_src
+
+** corfu
+
+[[https://github.com/minad/corfu][corfu]] enhances completion with a small completion popup.
+
+#+begin_src emacs-lisp
+  (use-package corfu
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-popupinfo-delay '(0.5 . 0.0))
+    :init
+    (global-corfu-mode)
+    (corfu-popupinfo-mode))
+#+end_src
+
+*** cape
+
+[[https://github.com/minad/cape][cape]] provides completion extensions that can be used with corfu.
+
+#+begin_src emacs-lisp
+  (use-package cape
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block))
+#+end_src
+
+*** nerd-icons-corfu
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-corfu
+    :init
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+
+** flycheck
+
+[[https://github.com/flycheck/flycheck][flycheck]] is a modern systax check extension for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :init
+    (global-flycheck-mode))
+#+end_src
+
+** yasnippet
+
+[[https://github.com/joaotavora/yasnippet][yasnippet]] is a template system for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :config
+    (yas-global-mode))
+#+end_src
+
+** yasnippet-snippets
+
+[[https://github.com/AndreaCrotti/yasnippet-snippets][yasnippet-snippets]] contains a collection of snippets for yasnippet.
+
+#+begin_src emacs-lisp
+  (use-package yasnippet-snippets)
+#+end_src
+
+** js2-mode
+
+#+begin_src emacs-lisp
+  (use-package js2-mode)
+#+end_src
+
+** smartparens
+
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :hook
+    (prog-mode . smartparens-mode)
+    :config
+    (require 'smartparens-config))
+#+end_src
+
+** rainbow-delimiters
+
+[[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] highlights delimiters according to their depths.
+
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook
+    (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+** lua-mode
+
+[[https://github.com/immerrr/lua-mode][lua-mode]] is a major mode for editing Lua sources.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :config
+    (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+    (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+#+end_src
+
+* Org-mode
+
+** Beautifying org
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'visual-line-mode)
+
+  (custom-set-faces
+   '(org-level-1 ((t (:height 1.2))))
+   '(org-level-2 ((t (:height 1.0))))
+   '(org-level-3 ((t (:height 0.9))))
+   '(org-level-4 ((t (:height 0.9))))
+   '(org-level-5 ((t (:height 0.9))))
+   '(org-level-6 ((t (:height 0.9))))
+   '(org-level-7 ((t (:height 0.9))))
+   '(org-level-8 ((t (:height 0.9))))
+   '(org-level-9 ((t (:height 0.9))))
+   )
+
+  (setq
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-special-ctrl-a/e t
+   org-ellipsis " ▾"
+   org-hide-emphasis-markers t
+   org-agenda-tags-column 0
+   org-pretty-entities t
+   org-startup-with-inline-images t
+   )
+#+end_src
+
+** org-tempo
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'org
+    (add-to-list 'org-modules 'org-tempo))
+  #+end_src
+
+** org-modern
+
+[[https://github.com/minad/org-modern][org-modern]] provides a modern look to org-mode.
+
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :config
+    (add-hook 'org-mode-hook #'org-modern-mode)
+    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
+#+end_src
+
+** toc-org
+
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :hook
+    (org-mode . toc-org-mode))
+#+end_src
+
+* PDF Tools
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools)
+#+end_src
