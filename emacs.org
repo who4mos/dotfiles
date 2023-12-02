@@ -10,9 +10,10 @@
   - [[#use-package][use-package]]
   - [[#try][try]]
 - [[#ui][UI]]
+  - [[#remove-welcome-screen][Remove Welcome Screen]]
+  - [[#cleaning-interface][Cleaning Interface]]
   - [[#theme][Theme]]
   - [[#font][Font]]
-  - [[#cleaning-interface][Cleaning Interface]]
   - [[#line-numbers][Line Numbers]]
   - [[#helpful][helpful]]
   - [[#dired][dired]]
@@ -49,6 +50,8 @@
   - [[#org-modern][org-modern]]
   - [[#toc-org][toc-org]]
 - [[#pdf-tools][PDF Tools]]
+- [[#vterm][vterm]]
+  - [[#vterm-toggle][vterm-toggle]]
 
 * Packages
 
@@ -128,6 +131,21 @@ Then, build and activate elpaca.
 
 * UI
 
+** Remove Welcome Screen
+
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+#+end_src
+
+** Cleaning Interface
+
+#+begin_src emacs-lisp
+  (setq
+   menu-bar-mode nil
+   tool-bar-mode nil
+   scroll-bar-mode nil)
+#+end_src
+
 ** Theme
 
 #+begin_src emacs-lisp
@@ -152,14 +170,6 @@ Then, build and activate elpaca.
   (use-package nerd-icons
     :custom
     (nerd-icons-font-family "Hack Nerd Font"))
-#+end_src
-
-** Cleaning Interface
-
-#+begin_src emacs-lisp
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
 #+end_src
 
 ** Line Numbers
@@ -528,4 +538,20 @@ Then, build and activate elpaca.
 
 #+begin_src emacs-lisp
   (use-package pdf-tools)
+#+end_src
+
+* vterm
+
+#+begin_src emacs-lisp
+  (use-package vterm)
+#+end_src
+
+** vterm-toggle
+
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+    :bind
+    ("C-\"" . multi-vterm-dedicated-toggle)
+    :custom
+    ( multi-vterm-dedicated-window-height-percent 30))
 #+end_src

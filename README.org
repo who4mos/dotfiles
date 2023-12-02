@@ -2,4 +2,5 @@
 
 - emacs version >= 29
 - nerd fonts (hack)
-  
+- cmake >= 3.11 (to compile vterm)
+- libtool (vterm)  
