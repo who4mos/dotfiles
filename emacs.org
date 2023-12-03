@@ -45,6 +45,7 @@
   - [[#rainbow-delimiters][rainbow-delimiters]]
   - [[#lua-mode][lua-mode]]
 - [[#org-mode][Org-mode]]
+  - [[#scratch-org-buffer][Scratch Org Buffer]]
   - [[#beautifying-org][Beautifying org]]
   - [[#org-tempo][org-tempo]]
   - [[#org-modern][org-modern]]
@@ -140,10 +141,9 @@ Then, build and activate elpaca.
 ** Cleaning Interface
 
 #+begin_src emacs-lisp
-  (setq
-   menu-bar-mode nil
-   tool-bar-mode nil
-   scroll-bar-mode nil)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
 #+end_src
 
 ** Theme
@@ -478,6 +478,15 @@ Then, build and activate elpaca.
 #+end_src
 
 * Org-mode
+
+** Scratch Org Buffer
+
+#+begin_src emacs-lisp
+  (setq
+   initial-major-mode 'org-mode
+   initial-scratch-message "")
+
+#+end_src
 
 ** Beautifying org
 
