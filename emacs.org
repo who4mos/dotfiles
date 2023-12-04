@@ -46,7 +46,9 @@
   - [[#lua-mode][lua-mode]]
 - [[#org-mode][Org-mode]]
   - [[#scratch-org-buffer][Scratch Org Buffer]]
-  - [[#beautifying-org][Beautifying org]]
+  - [[#capture][Capture]]
+  - [[#beautifying-org][Beautifying Org]]
+  - [[#org-babel-languages][Org Babel Languages]]
   - [[#org-tempo][org-tempo]]
   - [[#org-modern][org-modern]]
   - [[#toc-org][toc-org]]
@@ -488,7 +490,18 @@ Then, build and activate elpaca.
 
 #+end_src
 
-** Beautifying org
+** Capture
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  (setq org-capture-templates
+      '(("b" "Bookmark"
+	 entry (file+headline "~/bookmarks.org" "Bookmarks")
+	 "* [[%^{Link}][%^{Description}]]")))
+#+end_src
+
+** Beautifying Org
 
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'visual-line-mode)
@@ -515,6 +528,15 @@ Then, build and activate elpaca.
    org-pretty-entities t
    org-startup-with-inline-images t
    )
+#+end_src
+
+** Org Babel Languages
+
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
 #+end_src
 
 ** org-tempo
