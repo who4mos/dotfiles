@@ -53,6 +53,7 @@
   - [[#org-modern][org-modern]]
   - [[#toc-org][toc-org]]
 - [[#pdf-tools][PDF Tools]]
+  - [[#pdf-view-restore][pdf-view-restore]]
 - [[#vterm][vterm]]
   - [[#vterm-toggle][vterm-toggle]]
 
@@ -487,7 +488,6 @@ Then, build and activate elpaca.
   (setq
    initial-major-mode 'org-mode
    initial-scratch-message "")
-
 #+end_src
 
 ** Capture
@@ -525,7 +525,6 @@ Then, build and activate elpaca.
    org-ellipsis " ▾"
    org-hide-emphasis-markers t
    org-agenda-tags-column 0
-   org-pretty-entities t
    org-startup-with-inline-images t
    )
 #+end_src
@@ -569,6 +568,19 @@ Then, build and activate elpaca.
 
 #+begin_src emacs-lisp
   (use-package pdf-tools)
+#+end_src
+
+** pdf-view-restore
+
+[[https://github.com/007kevin/pdf-view-restore][pdf-view-restore]] remember pdf position in pdf-view-mode.
+
+#+begin_src emacs-lisp
+  (use-package pdf-view-restore
+    :after pdf-tools
+    :hook
+    (pdf-view-mode . pdf-view-restore-mode)
+    :custom
+    (pdf-view-restore-filename (expand-file-name ".pdf-view-restore" user-emacs-directory)))
 #+end_src
 
 * vterm
