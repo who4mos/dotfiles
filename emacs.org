@@ -5,7 +5,7 @@
 
 * TOC :TOC:
 - [[#packages][Packages]]
-  - [[#elpaca][Elpaca]]
+  - [[#packageel][Package.el]]
   - [[#use-package][use-package]]
   - [[#try][try]]
 - [[#ui][UI]]
@@ -16,7 +16,6 @@
   - [[#line-numbers][Line Numbers]]
   - [[#helpful][helpful]]
   - [[#dired][dired]]
-  - [[#mode-line][Mode Line]]
 - [[#key-bindings][Key Bindings]]
   - [[#revert-buffer][revert buffer]]
   - [[#which-key][which-key]]
@@ -28,8 +27,9 @@
 - [[#minibuffer][Minibuffer]]
   - [[#vertico][vertico]]
   - [[#consult][consult]]
-- [[#mode-line-1][Mode-line]]
+- [[#mode-line][Mode-line]]
   - [[#nyan-mode][nyan-mode]]
+  - [[#minions][minions]]
 - [[#fuzzy][Fuzzy]]
   - [[#orderless][Orderless]]
 - [[#programming][Programming]]
@@ -38,8 +38,6 @@
   - [[#corfu][corfu]]
   - [[#flycheck][flycheck]]
   - [[#yasnippet][yasnippet]]
-  - [[#yasnippet-snippets][yasnippet-snippets]]
-  - [[#js2-mode][js2-mode]]
   - [[#smartparens][smartparens]]
   - [[#rainbow-delimiters][rainbow-delimiters]]
   - [[#lua-mode][lua-mode]]
@@ -47,14 +45,16 @@
   - [[#scratch-org-buffer][Scratch Org Buffer]]
   - [[#capture][Capture]]
   - [[#beautifying-org][Beautifying Org]]
-  - [[#org-babel-languages][Org Babel Languages]]
-  - [[#org-tempo][org-tempo]]
   - [[#org-modern][org-modern]]
+  - [[#org-appear][org-appear]]
+  - [[#org-tempo][org-tempo]]
   - [[#toc-org][toc-org]]
 - [[#pdf-tools][PDF Tools]]
   - [[#pdf-view-restore][pdf-view-restore]]
 - [[#vterm][vterm]]
   - [[#vterm-toggle][vterm-toggle]]
+- [[#misc][MISC]]
+  - [[#accent][accent]]
 
 * Packages
 
@@ -77,7 +77,6 @@
     (package-install 'use-package))
   (setq use-package-always-ensure t)
   (require 'use-package)
-
 #+end_src
 
 ** try
@@ -107,30 +106,26 @@
 ** Theme
 
 #+begin_src emacs-lisp
-  (use-package ef-themes)
-
-  ;(use-package modus-themes
-  ;  :custom
-  ;  (modus-themes-italic-constructs t)
-  ;  (modus-themes-bold-constructs t)
-  ;  (modus-themes-org-blocks nil)
-  ;  :config
-  ;  (load-theme 'modus-vivendi t))
+  (use-package ef-themes
+    :config
+    (load-theme 'ef-winter t))
 #+end_src
 
 ** Font
 
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil :font "Hack Nerd Font" :height 120)
+  (set-face-attribute 'default nil :font "Iosevka Extended" :height 120)
 #+end_src
 
 *** nerd-icons
 
+[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]] is a library to use nerd fonts in emacs.
+
 #+begin_src emacs-lisp
   (use-package nerd-icons
     :custom
-    (nerd-icons-font-family "Hack Nerd Font"))
-#+end_src
+    (nerd-icons-font-family "Iosevka Nerd Font"))
+ #+end_src
 
 ** Line Numbers
 
@@ -154,26 +149,20 @@
 
 ** dired
 
+Change arguments passed to ~ls~.
+
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-agho --group-directories-first")
 #+end_src
 
 *** nerd-icons-dired
 
+[[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] allows you to use nerd-icons with dired.
+
 #+begin_src emacs-lisp
   (use-package nerd-icons-dired
     :hook
     (dired-mode . nerd-icons-dired-mode))
-#+end_src
-
-** Mode Line
-
-*** minions
-
-#+begin_src emacs-lisp
-  (use-package minions
-    :init
-    (minions-mode))
 #+end_src
 
 * Key Bindings
@@ -229,8 +218,7 @@
     ("C-S-c C-e" . mc/edit-ends-of-lines)
     ("C-S-c C-a" . mc/edit-beginnings-of-lines)
     ("C->" . mc/mark-next-like-this)
-    ("C-<" . mc/mark-previous-like-this)
-    ("C-;" . mc/mark-all-like-this))
+    ("C-<" . mc/mark-previous-like-this))
 #+end_src
 
 ** expand-region
@@ -266,6 +254,18 @@
     (marginalia-mode))
 #+end_src
 
+**** nerd-icons-completion
+
+[[https://github.com/rainstormstudio/nerd-icons-completion][nerd-icons-completion]] use nerd icons to add icons with marginalia.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+#+end_src
+
 ** consult
 
 [[https://github.com/minad/consult][consult]] provides search and navigation commands based in the built-in complete system.
@@ -290,6 +290,8 @@
 
 ** nyan-mode
 
+[[https://github.com/TeMPOraL/nyan-mode][nyan-mode]] indicates your position in a buffer...
+
 #+begin_src emacs-lisp
   (use-package nyan-mode
     :custom
@@ -297,6 +299,16 @@
     (nyan-wavy-trail t)
     :config
     (nyan-mode))
+#+end_src
+
+** minions
+
+[[https://github.com/tarsius/minions][minions]] nests all minor modes into a single one.
+
+#+begin_src emacs-lisp
+  (use-package minions
+    :init
+    (minions-mode))
 #+end_src
 
 * Fuzzy
@@ -323,6 +335,14 @@
   (use-package magit)
 #+end_src
 
+*** git-timemachine
+
+[[https://github.com/emacsmirror/git-timemachine][git-timemachine]] allows you to go back and forth in time in a git directory.
+
+#+begin_src emacs-lisp
+  (use-package git-timemachine)
+#+end_src
+
 ** Eglot
 
 [[https://github.com/joaotavora/eglot][Eglot]] is the emacs built-in [[https://en.wikipedia.org/wiki/Language_Server_Protocol][LSP]] client.
@@ -330,10 +350,10 @@
 #+begin_src emacs-lisp
   (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-	       '(python-mode . ("pyright-langserver" "--stdio"))
-	       '(js-mode . ("typescript-language-server" "--stdio"))))
+	       '(python-mode . ("pyright-langserver" "--stdio"))))
 
   (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'js-mode-hook 'eglot-ensure)
 #+end_src
 
@@ -353,6 +373,16 @@
     (corfu-popupinfo-mode))
 #+end_src
 
+*** nerd-icons-corfu
+
+[[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]] uses nerd icons to add icons in corfu completions.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-corfu
+    :init
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+
 *** cape
 
 [[https://github.com/minad/cape][cape]] provides completion extensions that can be used with corfu.
@@ -362,14 +392,6 @@
     :init
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-elisp-block))
-#+end_src
-
-*** nerd-icons-corfu
-
-#+begin_src emacs-lisp
-  (use-package nerd-icons-corfu
-    :init
-    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 #+end_src
 
 ** flycheck
@@ -392,7 +414,7 @@
     (yas-global-mode))
 #+end_src
 
-** yasnippet-snippets
+*** yasnippet-snippets
 
 [[https://github.com/AndreaCrotti/yasnippet-snippets][yasnippet-snippets]] contains a collection of snippets for yasnippet.
 
@@ -400,13 +422,9 @@
   (use-package yasnippet-snippets)
 #+end_src
 
-** js2-mode
-
-#+begin_src emacs-lisp
-  (use-package js2-mode)
-#+end_src
-
 ** smartparens
+
+[[https://github.com/Fuco1/smartparens][smartparens]] is a minor mode for dealing with pairs.
 
 #+begin_src emacs-lisp
   (use-package smartparens
@@ -442,6 +460,8 @@
 
 ** Scratch Org Buffer
 
+Change scratch-buffer's mode. 
+
 #+begin_src emacs-lisp
   (setq
    initial-major-mode 'org-mode
@@ -449,6 +469,8 @@
 #+end_src
 
 ** Capture
+
+Setup [[https://orgmode.org/manual/Using-capture.html][org-capture]] and define a template to capture bookmarks.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c c") 'org-capture)
@@ -483,17 +505,29 @@
    org-ellipsis " ▾"
    org-hide-emphasis-markers t
    org-agenda-tags-column 0
-   org-startup-with-inline-images t
+   
    )
 #+end_src
 
-** Org Babel Languages
+** org-modern
+
+[[https://github.com/minad/org-modern][org-modern]] provides a modern look to org-mode.
 
 #+begin_src emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)))
+  (use-package org-modern
+    :hook
+    (org-mode . org-modern-mode)
+    (org-agenda-finalize . org-modern-agenda))
+#+end_src
+
+** org-appear
+
+[[https://github.com/awth13/org-appear][org-appear]] automatically toggles visibility of hidden elements like emphasis markers.
+
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :hook
+    (org-mode . org-appear-mode))
 #+end_src
 
 ** org-tempo
@@ -502,17 +536,6 @@
   (with-eval-after-load 'org
     (add-to-list 'org-modules 'org-tempo))
   #+end_src
-
-** org-modern
-
-[[https://github.com/minad/org-modern][org-modern]] provides a modern look to org-mode.
-
-#+begin_src emacs-lisp
-  (use-package org-modern
-    :config
-    (add-hook 'org-mode-hook #'org-modern-mode)
-    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
-#+end_src
 
 ** toc-org
 
@@ -555,4 +578,16 @@
     ("C-\"" . multi-vterm-dedicated-toggle)
     :custom
     ( multi-vterm-dedicated-window-height-percent 30))
+#+end_src
+
+* MISC
+
+** accent
+
+[[https://github.com/eliascotto/accent][accent]] opens a menu with accented chars.
+
+#+begin_src emacs-lisp
+  (use-package accent
+    :bind
+    ("C-x C-a" . accent-menu))
 #+end_src

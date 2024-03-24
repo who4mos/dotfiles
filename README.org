@@ -1,6 +1,7 @@
 * Requirements
 
-- emacs version >= 29
-- nerd fonts (hack)
-- cmake >= 3.11 (to compile vterm)
-- libtool (vterm)  
+- emacs >= 29
+- git
+- [[https://github.com/be5invis/Iosevka][Iosevka]] (nerd also)
+- cmake >= 3.11 (vterm)
+- libtool (vterm)
