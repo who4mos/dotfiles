@@ -1,0 +1,46 @@
+* Git
+
+With ~git~ installed, link the git config file to home.
+
+: ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
+
+* Emacs
+
+I build emacs from source, for that installation you'll need the following packages (note that most of them will also need its development variant):
+
+- ~git~
+- ~gcc~
+- ~make~
+- ~pkg-config~
+- ~autoconf~
+- ~libgccjit~
+- ~tree-sitter~
+- ~gnutls~
+- ~ncurses~
+- ~ImageMagick~
+- ~texinfo~
+- ~cairo~
+- ~libXaw~
+- ~libjpeg-turbo~, ~libpng~, ~tiff~, ~giflib~ and ~libXpm~
+
+
+Also note that the package's names above are their names in void linux.
+
+After installing all requirements you can build emacs:
+
+#+begin_src sh
+  git clone https://git.savannah.gnu.org/cgit/emacs.git
+  cd emacs
+  ./autogen.sh
+  ./configure --with-native-compilation --with-tree-sitter --with-imagemagick --with-xwidgets --with-mailutils
+  make
+  sudo make install
+#+end_src
+
+Now, to allow the org file to tangle its code to the other files, you must have these files:
+
+#+begin_src sh
+  mkdir -p ~/.config/emacs
+  touch ~/.config/emacs/init.el
+  touch ~/.config/emacs/early-init.el
+#+end_src

@@ -1,0 +1,259 @@
+#+TITLE: Emacs Configuration
+#+PROPERTY: header-args :tangle ~/.config/emacs/init.el
+
+* Package Management
+
+[[https://github.com/radian-software/straight.el][straight.el]] is a package manager, it substitutes ~package.el~.
+
+With ~straight.el~, you can give a recipe for specific packages and where to find them. Also, packages are cloned as git repos, not tarballs. You have more control over your packages.
+
+First, you need to disable ~package.el~ by adding this line to the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][early init file]]:
+
+#+begin_src emacs-lisp :tangle ~/.config/emacs/early-init.el
+  (setq package-enable-at-startup nil)
+#+end_src
+
+Then, add the straight bootstrap code:
+
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name
+	  "straight/repos/straight.el/bootstrap.el"
+	  (or (bound-and-true-p straight-base-dir)
+	      user-emacs-directory)))
+	(bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
+** use-package
+
+[[https://www.emacswiki.org/emacs/UsePackage][use-package]] allows you to configure packages in a isolate and declarative way. ~use-package~ is now a built-in package. Since emacs 29.1, ~use-package~ is a built-in package.
+
+Before using it, tell ~use-package~ to use ~straight.el~.
+
+#+begin_src emacs-lisp
+  (setq straight-use-package-by-default t)
+#+end_src
+
+* UI
+
+Inhibit startup screen and remove bars to a cleaner UI.
+
+#+begin_src emacs-lisp
+  (setq inhibit-startup-screen t)
+  (scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+#+end_src
+
+** Theme
+
+[[https://protesilaos.com/emacs/ef-themes][ef-themes]]
+
+#+begin_src emacs-lisp
+  (use-package ef-themes
+    :config
+    (load-theme 'ef-dream :no-confirm))
+#+end_src
+
+** Font
+
+Set font to [[https://github.com/source-foundry/Hack][Hack]].
+
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist
+	       '(font . "Hack Nerd Font-11"))
+#+end_src
+
+** Icons
+
+[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]] allows you to use [[https://github.com/ryanoasis/nerd-fonts][nerd-fonts]] inside emacs.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :custom
+    (nerd-icons-font-family "Hack Nerd Font"))
+#+end_src
+
+** helpful
+
+[[https://github.com/Wilfred/helpful][helpful]] substitutes the built-in help system, it gives a lot of /helpful/ information.
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :bind (
+    ([remap describe-key]      . helpful-key)
+    ([remap describe-function] . helpful-callable)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-command]  . helpful-command)))
+#+end_src
+
+* Window Management
+
+[[https://github.com/abo-abo/ace-window][ace-window]] helps you to select a window and switch to it.
+
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind
+    ("M-o" . ace-window))
+#+end_src
+
+* File Management
+
+Move backup files to a single directory.
+
+#+begin_src emacs-lisp
+  (setq backup-directory-alist '(("." . "~/.config/emacs/backups")))
+#+end_src
+
+Set ~ls~ parameters to use in [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired-Enter.html][dired]].
+
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-lah --group-directories-first")
+#+end_src
+
+[[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] allows nerd-icons to be used in dired.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+** Sidebar
+
+[[https://github.com/jojojames/dired-sidebar][dired-sidebar]] provides a sidebar based on dired.
+
+#+begin_src emacs-lisp
+  (use-package dired-sidebar
+    :commands (dired-sidebar-toggle-sidebar)
+    :bind
+    ("C-;" . dired-sidebar-toggle-sidebar))
+#+end_src
+
+* Search and Navigation
+
+[[https://github.com/minad/consult][consult]] provides search and navigation commands based on the built-in completion function ~completing-read~.
+
+#+begin_src emacs-lisp
+  (use-package consult
+    :bind (
+	   ([remap isearch-forward] . consult-line)
+	   ([remap go-to-line] . consult-go-to-line)
+	   ([remap switch-to-buffer] . consult-buffer)
+	   ([remap yank-pop] . consult-yank-pop)
+	   ([remap info] . consult-info)
+	   ([remap imenu] . consult-imenu)
+	   ("C-c M-x" . consult-mode-command)
+	   ("C-c m" . consult-man)
+	   :map org-mode-map
+	   ([remap imenu] . consult-org-heading)))
+#+end_src
+
+[[https://github.com/abo-abo/avy][avy]] allows you to jump to visible text by selecting a character.
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :bind
+    ("M-s" . avy-goto-char))
+#+end_src
+
+* Completion
+
+There are completions in-buffer and in the minibuffer. There are also some tools that allows fuzzy and narrowed searches.
+
+** Minibuffer
+
+[[https://github.com/minad/vertico][vertico]] is a minimalist completion UI based on the built-in completion system.
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :custom
+    (vertico-cycle t)
+    :init
+    (vertico-mode))
+#+end_src
+
+*** Marginalia
+
+[[https://github.com/minad/marginalia][marginalia]] adds marginalia to minibuffer completions.
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :init
+    (marginalia-mode))
+#+end_src
+
+*** Icons
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :config
+    (nerd-icons-completion-mode))
+#+end_src
+
+** Completion Style
+
+[[https://github.com/oantolin/orderless][orderless]] provides an ~orderless~ completion style.
+
+#+begin_src emacs-lisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+* Editing
+
+[[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] provides /multiple cursors/..
+
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind (
+	   ("C->" . mc/mark-next-like-this)
+	   ("C-<" . mc/mark-previous-like-this)))
+#+end_src
+
+* Dealing with Delimiters
+
+[[https://github.com/Fuco1/smartparens][smartparens]] deals with delimiters in a smart way.
+
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :hook
+    (prog-mode . smartparens-mode)
+    :config
+    (require 'smartparens-config))
+#+end_src
+
+[[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] highlights delimiters (e.g.: ~()~, ~{}~, ~[]~).
+
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook
+    (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+* Version Control
+
+[[https://magit.vc/][magit]] is a text based UI to [[https://git-scm.com/][git]].
+
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+* OS
+
+[[https://github.com/iqbalansari/restart-emacs][restart-emacs]] allows you to restart emacs within emacs.
+
+#+begin_src emacs-lisp
+  (use-package restart-emacs)
+#+end_src
