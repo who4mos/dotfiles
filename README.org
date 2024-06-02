@@ -44,3 +44,22 @@ Now, to allow the org file to tangle its code to the other files, you must have 
   touch ~/.config/emacs/init.el
   touch ~/.config/emacs/early-init.el
 #+end_src
+
+** Features
+
+- Package management with ~straight.el~ and ~use-package~
+- ~ef-themes~
+- ~Hack~ font
+- Icons ~nerd-icons~ and specific nerd-icons packages
+- Better help system with ~helpful~
+- Window management with ~ace-window~
+- Dired enhancement with ~dired-sidebar~
+- Navigation with ~avy~
+- Search commands with ~consult~
+- Minibuffer completions with ~vertico~ and ~marginalia~
+- Fuzzy and narrowed completion style with ~orderless~
+- Massive editing with ~multiple-cursors~
+- Delimiters handling with ~smartparens~ and ~rainbow-delimiters~
+- Version control with ~magit~
+- Easy life with ~restart-emacs~
+- Everything with ~org~
