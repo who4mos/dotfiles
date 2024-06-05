@@ -1,3 +1,22 @@
+* Bspwm
+
+To get window management working, install ~bspwm~ and ~sxhkd~, then link the configuration files:
+
+#+begin_src sh
+  mkdir -p ~/.config/bspwm ~/.config/sxhkd
+  ln -s  ~/.dotfiles/bspwmrc ~/.config/bspwm/bspwmrc
+  ln -s  ~/.dotfiles/sxhkdrc ~/.config/sxhkd/sxhkdrc
+#+end_src
+
+* Rofi
+
+Instlal ~rofi~, then link the configuration files:
+
+#+begin_src sh
+  mkdir -p ~/.config/rofi
+  ln -s ~/.dotfiles/rofi/config.rasi ~/.config/rofi/config.rasi
+#+end_src
+
 * Git
 
 With ~git~ installed, link the git config file to home.
@@ -44,6 +63,8 @@ Now, to allow the org file to tangle its code to the other files, you must have 
   touch ~/.config/emacs/init.el
   touch ~/.config/emacs/early-init.el
 #+end_src
+
+Finally, open the ~emacs.org~ file with emacs and tangle: ~C-c C-v t~ (~org-babel-tangle~).
 
 ** Features
 
