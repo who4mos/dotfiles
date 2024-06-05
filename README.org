@@ -10,7 +10,7 @@ To get window management working, install ~bspwm~ and ~sxhkd~, then link the con
 
 * Rofi
 
-Instlal ~rofi~, then link the configuration files:
+Install ~rofi~, then link the configuration files:
 
 #+begin_src sh
   mkdir -p ~/.config/rofi
