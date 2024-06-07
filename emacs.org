@@ -267,3 +267,38 @@ For compatibily reasons, i keep the org bundled with the emacs build.
            ([remap imenu] . consult-org-heading)))
 #+end_src
 
+* Programming
+
+** tree-sitter
+
+[[https://emacs-tree-sitter.github.io/][tree-sitter]] is built-in since emacs 29. Basically, tree-sitter enhances understanding of source code. To do that, you'll need language grammar libraries.
+
+Emacs will look for these libraries in directories listed in the ~treesit-extra-load-path~ variable, then in the the tree-sitter subdir in ~user-emacs-directory~ (e.g.: ~/.config/emacs/tree-sitter/~), and then in the standard system directories for shared libraries.
+
+You install these libraries using the ~treesit-install-language-grammar~ command. The ~treesit-language-source-alist~ variable can tell the command where to look for the libraries.
+
+#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+     '((c "https://github.com/tree-sitter/tree-sitter-c")))
+
+  (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+#+end_src
+
+The ~mapc~ line makes the ~treesit-install-language-grammar~ command install the grammar library for each language specified in the ~treesit-language-source-alist~ variable.
+
+The default way emacs implements syntax-highlighting is very different than the way tree-sitter does. Emacs does it with a lot of regex, tree-sitter parses the code into a syntax tree.
+
+Because of that, instead of embed tree-sitter in existing programming modes, there are new "ts"-powered modes.
+
+You can customize the ~major-mode-remap-alist~ to automatically turn on tree-sitter based modes.
+
+#+begin_src emacs-lisp
+  (setq major-mode-remap-alist
+        '((c-mode . c-ts-mode)))
+#+end_src
+
+
+
+
+
+
