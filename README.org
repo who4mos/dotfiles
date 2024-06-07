@@ -40,7 +40,7 @@ I build emacs from source, for that installation you'll need the following packa
 - ~texinfo~
 - ~cairo~
 - ~libXaw~
-- ~libjpeg-turbo~, ~libpng~, ~tiff~, ~giflib~ and ~libXpm~
+- ~libjpeg-turbo~, ~libpng~, ~tiff~, ~giflib~, ~libXpm~ and ~librsvg~
 
 
 Also note that the package's names above are their names in void linux.
@@ -51,7 +51,7 @@ After installing all requirements you can build emacs:
   git clone https://git.savannah.gnu.org/cgit/emacs.git
   cd emacs
   ./autogen.sh
-  ./configure --with-native-compilation --with-tree-sitter --with-imagemagick --with-xwidgets --with-mailutils
+  ./configure --with-native-compilation --with-tree-sitter --with-imagemagick --with-mailutils
   make
   sudo make install
 #+end_src
