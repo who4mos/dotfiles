@@ -153,9 +153,7 @@ Set ~ls~ parameters to use in [[https://www.gnu.org/software/emacs/manual/html_n
 	   ([remap info] . consult-info)
 	   ([remap imenu] . consult-imenu)
 	   ("C-c M-x" . consult-mode-command)
-	   ("C-c m" . consult-man)
-	   :map org-mode-map
-	   ([remap imenu] . consult-org-heading)))
+	   ("C-c m" . consult-man)))
 #+end_src
 
 [[https://github.com/abo-abo/avy][avy]] allows you to jump to visible text by selecting a character.
@@ -250,10 +248,22 @@ There are completions in-buffer and in the minibuffer. There are also some tools
   (use-package magit)
 #+end_src
 
-* OS
+* Org Mode
 
-[[https://github.com/iqbalansari/restart-emacs][restart-emacs]] allows you to restart emacs within emacs.
+For compatibily reasons, i keep the org bundled with the emacs build.
 
 #+begin_src emacs-lisp
-  (use-package restart-emacs)
+  (use-package org
+    :straight nil
+    :custom
+    (org-startup-indented t)
+    (org-hide-emphasis-markers t)
+    (org-special-ctrl-a/e t)
+    (org-log-done 'time)
+    :bind (
+           ("C-c a" . org-agenda)
+           ("C-c l" . org-store-link)
+           :map org-mode-map
+           ([remap imenu] . consult-org-heading)))
 #+end_src
+
