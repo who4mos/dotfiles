@@ -83,4 +83,14 @@ Finally, open the ~emacs.org~ file with emacs and tangle: ~C-c C-v t~ (~org-babe
 - Delimiters handling with ~smartparens~ and ~rainbow-delimiters~
 - Version control with ~magit~
 - Easy life with ~restart-emacs~
+- Parsing with ~tree-sitter~
+- LSP with ~eglot~
 - Everything with ~org~
+
+*** eglot servers
+
+If you want to use eglot, you need to install the following servers:
+
+- c: ~clangd~ (~clang-tools~ in void)
+- python: ~pyright~
+

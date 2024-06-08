@@ -271,7 +271,13 @@ For compatibily reasons, i keep the org bundled with the emacs build.
 
 ** tree-sitter
 
-[[https://emacs-tree-sitter.github.io/][tree-sitter]] is built-in since emacs 29. Basically, tree-sitter enhances understanding of source code. To do that, you'll need language grammar libraries.
+Since version 29, emacs can be built with support for tree-sitter. Basically, tree-sitter enhances understanding of source code.
+
+#+begin_src emacs-lisp
+  (require 'treesit)
+#+end_src
+
+Tree-sitter itself doesn't know how to parse any language, for that, we need to install language grammars libraries.
 
 Emacs will look for these libraries in directories listed in the ~treesit-extra-load-path~ variable, then in the the tree-sitter subdir in ~user-emacs-directory~ (e.g.: ~/.config/emacs/tree-sitter/~), and then in the standard system directories for shared libraries.
 
@@ -279,12 +285,19 @@ You install these libraries using the ~treesit-install-language-grammar~ command
 
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
-     '((c "https://github.com/tree-sitter/tree-sitter-c")))
-
-  (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+        '((c "https://github.com/tree-sitter/tree-sitter-c")
+          (python "https://github.com/tree-sitter/tree-sitter-python")))
 #+end_src
 
-The ~mapc~ line makes the ~treesit-install-language-grammar~ command install the grammar library for each language specified in the ~treesit-language-source-alist~ variable.
+The following elisp installs grammar libraries that aren't already installed.
+
+#+begin_src emacs-lisp
+  (dolist (lang treesit-language-source-alist)
+    (unless (treesit-language-available-p (car lang))
+      (treesit-install-language-grammar (car lang))))
+#+end_src
+
+The langugage specified may be named differently than its library. You can use the ~treesit-load-name-override-list~ variable to map the language to the correct library name.
 
 The default way emacs implements syntax-highlighting is very different than the way tree-sitter does. Emacs does it with a lot of regex, tree-sitter parses the code into a syntax tree.
 
@@ -294,11 +307,28 @@ You can customize the ~major-mode-remap-alist~ to automatically turn on tree-sit
 
 #+begin_src emacs-lisp
   (setq major-mode-remap-alist
-        '((c-mode . c-ts-mode)))
+        '((c-mode . c-ts-mode)
+          (python-mode . python-ts-mode)))
 #+end_src
 
+** eglot
 
+[[https://joaotavora.github.io/eglot/][eglot]] is a LSP client built into emacs since version 29.1.
 
+For eglot to be useful you must combine it with a language server. The language server must be installed separately.
 
+The variable ~eglot-server-programs~ associates major modes with names and arguments of the language server for that programming language.
 
+You can run ~eglot~ in a buffer to start the language server for that major mode. You can also set eglot to start automatically with hooks:
 
+#+begin_src emacs-lisp
+  (use-package eglot
+    :straight nil
+    :config
+    (add-to-list 'eglot-server-programs
+                 '(c-ts-mode . ("clangd"))
+                 '(python-ts-mode . ("pyright")))
+    :hook
+    (c-ts-mode . eglot-ensure)
+    (python-ts-mode . eglot-ensure))
+#+end_src
