@@ -84,6 +84,7 @@ Finally, open the ~emacs.org~ file with emacs and tangle: ~C-c C-v t~ (~org-babe
 - Version control with ~magit~
 - Easy life with ~restart-emacs~
 - Parsing with ~tree-sitter~
+- Region expansion with ~expreg~
 - LSP with ~eglot~
 - Everything with ~org~
 
