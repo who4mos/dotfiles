@@ -229,10 +229,9 @@ There are completions in-buffer and in the minibuffer. There are also some tools
 
 #+begin_src emacs-lisp
   (use-package cape
-    :init
-    (add-hook 'completion-at-point-functions #'cape-dict)
-    (add-hook 'completion-at-point-functions #'cape-file)
-    (add-hook 'completion-at-point-functions #'cape-elisp-block))
+      :init
+      (add-hook 'completion-at-point-functions #'cape-file)
+      (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+end_src
 
 ** Completion Style

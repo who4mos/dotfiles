@@ -78,6 +78,7 @@ Finally, open the ~emacs.org~ file with emacs and tangle: ~C-c C-v t~ (~org-babe
 - Navigation with ~avy~
 - Search commands with ~consult~
 - Minibuffer completions with ~vertico~ and ~marginalia~
+- Inbuffer completion with ~corfu~ and ~cape~
 - Fuzzy and narrowed completion style with ~orderless~
 - Massive editing with ~multiple-cursors~
 - Delimiters handling with ~smartparens~ and ~rainbow-delimiters~
@@ -95,3 +96,4 @@ If you want to use eglot, you need to install the following servers:
 - c: ~clangd~ (~clang-tools~ in void)
 - python: ~pyright~
 
+  
