@@ -379,3 +379,17 @@ You can run ~eglot~ in a buffer to start the language server for that major mode
            ("C-=" . expreg-expand)
            ("C-+" . expreg-contract)))
 #+end_src
+
+* PDF Tools
+
+[[https://github.com/vedang/pdf-tools?tab=readme-ov-file][PDF Tools]] is a replacement for DocView for PDF files. PDF tools requires a server ~epdfinfo~.
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools)
+#+end_src
+
+You can install the ~epdfinfo~ program by running the command ~pdf-tools-install~.
+
+
+
+* 
