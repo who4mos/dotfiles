@@ -83,6 +83,18 @@ Set font to [[https://github.com/source-foundry/Hack][Hack]].
     (nerd-icons-font-family "Hack Nerd Font"))
 #+end_src
 
+** Mode Line
+
+[[https://github.com/seagle0128/doom-modeline?tab=readme-ov-file][doom-modeline]] is a fast and minimal mode-line. It offers a lot of cool features and works well with a lot of other packages.
+
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :custom
+    (doom-modeline-height 25)
+    :hook
+    (after-init . doom-modeline-mode))
+#+end_src
+
 ** helpful
 
 [[https://github.com/Wilfred/helpful][helpful]] substitutes the built-in help system, it gives a lot of /helpful/ information.
@@ -392,4 +404,3 @@ You can install the ~epdfinfo~ program by running the command ~pdf-tools-install
 
 
 
-* 
