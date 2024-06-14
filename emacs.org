@@ -381,6 +381,16 @@ You can run ~eglot~ in a buffer to start the language server for that major mode
     (python-ts-mode . eglot-ensure))
 #+end_src
 
+** ELDoc box
+
+[[https://github.com/casouri/eldoc-box][ELDoc box]] displays eldoc documentation in a box.
+
+#+begin_src emacs-lisp
+  (use-package eldoc-box
+    :hook
+    (eldoc-mode . eldoc-box-hover-at-point-mode))
+#+end_src
+
 ** expreg
 
 [[https://github.com/casouri/expreg][expreg]] is a [[https://github.com/magnars/expand-region.el][expand-region]] but with some advantages, including the use of tree-sitter.
