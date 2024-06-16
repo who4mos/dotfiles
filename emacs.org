@@ -296,6 +296,12 @@ There are completions in-buffer and in the minibuffer. There are also some tools
   (use-package magit)
 #+end_src
 
+[[https://github.com/emacsmirror/git-timemachine][git-timemachine]] allows you to go back and forth through time.
+
+#+begin_src emacs-lisp
+  (use-package git-timemachine)
+#+end_src
+
 * Org Mode
 
 For compatibily reasons, i keep the org bundled with the emacs build.
@@ -412,5 +418,13 @@ You can run ~eglot~ in a buffer to start the language server for that major mode
 
 You can install the ~epdfinfo~ program by running the command ~pdf-tools-install~.
 
+[[https://github.com/007kevin/pdf-view-restore][pdf-view-restore]] provides support for opening PDF documents in last known position.
 
-
+#+begin_src emacs-lisp
+  (use-package pdf-view-restore
+    :after pdf-tools
+    :custom
+    (pdf-view-restore-filename "~/.config/emacs/.pdf-view-restore")
+    :hook
+    (pdf-view-mode . pdf-view-restore-mode))
+#+end_src

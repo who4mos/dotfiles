@@ -83,7 +83,7 @@ Finally, open the ~emacs.org~ file with emacs and tangle: ~C-c C-v t~ (~org-babe
 - Fuzzy and narrowed completion style with ~orderless~
 - Massive editing with ~multiple-cursors~
 - Delimiters handling with ~smartparens~ and ~rainbow-delimiters~
-- Version control with ~magit~
+- Version control with ~magit~ and ~git-timemachine~
 - Easy life with ~restart-emacs~
 - Parsing with ~tree-sitter~
 - Region expansion with ~expreg~
