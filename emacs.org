@@ -520,7 +520,7 @@ By default, in HTML buffers ~M-o~ is binded to ~font-lock-fontify-block~ change 
 #+begin_src emacs-lisp
   (use-package vterm
     :ensure t
-    :defer t)
+    :commands (vterm))
 #+end_src
 
 ** multi vterm 
