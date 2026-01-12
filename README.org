@@ -1,0 +1,49 @@
+* Files
+
+- [[file:emacs.org][emacs.org]] (emacs literate config)
+  
+* Emacs
+
+** Building from source
+
+I recommend visiting [[https://aur.archlinux.org/packages/emacs-git][emacs-git]] on aur, to get an idea of which packages you (or me in the future) will need to build emacs from source.
+
+Then:
+
+#+begin_src bash
+  git clone https://git.savannah.gnu.org/git/emacs.git
+  ./autogen.sh
+  ./configure --with-native-compilation=aot --with-pgtk --with-tree-sitter --with-imagemagick --with-mailutils
+  make -j$(nproc)
+  make install
+#+end_src
+
+** Setting Up
+
+After emacs is installed you can create the emacs config directory:
+
+#+begin_src bash
+  mkdir -p ~/.config/emacs
+#+end_src
+
+Then open the [[file:emacs.org][emacs.org]] in emacs and tangle it (~C-c C-v C-t~)!
+
+** Fonts
+
+- ~Noto Color Emoji~ (emojis)
+- ~Hack Nerd Font~ (default and fixed-pitch)
+- ~Source Sans Pro~ (variable-pitch)
+
+** Language Servers
+
+- Bash: [[https://github.com/bash-lsp/bash-language-server][bash-language-server]]
+- C/C++: [[https://clangd.llvm.org/][clangd]]
+- HTML/CSS: [[https://github.com/hrsh7th/vscode-langservers-extracted][vscode-langservers-extracted]]
+- JavaScript: [[https://github.com/typescript-language-server/typescript-language-server][typescript-language-server]]
+- Python: [[https://github.com/microsoft/pyright][pyright]]
+
+** Packages requirements
+
+- Vterm: ~cmake~, ~libtool~ and ~libvterm~ (optional)
+
+

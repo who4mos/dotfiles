@@ -1,0 +1,574 @@
+#+author: who4mos
+#+title: My emacs config
+#+property: header-args :tangle ~/.config/emacs/init.el
+#+startup: show2levels
+
+* Lexical Binding
+
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+#+end_src
+
+* Packages Setup
+
+Setup package archives and priorities.
+
+#+begin_src emacs-lisp
+  (setopt package-archives
+  	    '(("gnu" . "https://elpa.gnu.org/packages/")
+  	      ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+  	      ("melpa" . "https://melpa.org/packages/")))
+
+  (setopt package-archive-priorities
+  	    '(("gnu" . 3)
+            ("melpa" . 2)
+            ("nongnu" . 1)))
+#+end_src
+
+** Try
+
+[[https://github.com/larstvei/try][Try]] lets you try packages without installing them.
+
+#+begin_src emacs-lisp
+  (use-package try
+    :ensure t
+    :commands (try try-and-refresh))
+#+end_src
+
+* "Better" Defaults
+
+Set [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Language-Environments.html][language environment]], [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Coding-Systems.html][coding systems]] and specify the default [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Select-Input-Method.html][input method]].
+
+#+begin_src emacs-lisp
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8)
+  (setopt default-input-method "portuguese-prefix")  
+#+end_src
+
+Disable the creation of [[https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Locks.html][lock files]] and [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup.html][backup files]].
+
+#+begin_src emacs-lisp
+  (setopt create-lockfiles nil
+          make-backup-files nil)
+#+end_src
+
+Inhibit startup screen and clear scratch buffer.
+
+#+begin_src emacs-lisp
+  (setopt inhibit-startup-screen t
+          initial-scratch-message nil)
+#+end_src
+
+Specify how to name buffers with the same name.
+
+#+begin_src emacs-lisp
+  (use-package uniquify
+    :custom
+    (uniquify-buffer-name-style 'forward))
+#+end_src
+
+Keep track of opened files.
+
+#+begin_src emacs-lisp
+  (use-package recentf
+    :custom
+    (recentf-max-saved-items 200)
+    :init
+    (recentf-mode))
+#+end_src
+
+Delete text when typing in a selected region.
+
+#+begin_src emacs-lisp
+  (delete-selection-mode)  
+#+end_src
+
+Display column numbers in mode line.
+
+#+begin_src emacs-lisp
+  (column-number-mode)
+#+end_src
+
+Scroll the display precisely with mouse wheel.
+
+#+begin_src emacs-lisp
+  (pixel-scroll-precision-mode)
+#+end_src
+
+* Window Movement
+
+[[https://github.com/abo-abo/ace-window][ace-window]] is a better way to select a window to switch to. ~winner-mode~ records window layout changes, so that the changes can be undone.
+
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind
+    ("M-o" . ace-window)
+    :init
+    (winner-mode))
+#+end_src
+
+* UI
+
+** Disable Bars
+
+Disable the tool bar, menu bar and scroll bar.
+
+#+begin_src emacs-lisp
+  (setopt tool-bar-mode nil
+  	    menu-bar-mode nil
+  	    scroll-bar-mode nil)
+#+end_src
+
+** Fonts
+
+Set default, fixed and variable width fonts.
+
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil :family "Hack Nerd Font" :height 110)
+  (set-face-attribute 'fixed-pitch nil :family "Hack Nerd Font")
+  (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 10)
+#+end_src
+
+** Transparency
+
+Set background opacity.
+
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(alpha-background . 90))
+#+end_src
+
+** Theme
+
+Load and configure the built-in [[https://protesilaos.com/emacs/modus-themes][modus-themes]].
+
+#+begin_src emacs-lisp
+  (use-package modus-themes
+    :init
+    (require-theme 'modus-themes)
+    :custom
+    (modus-themes-italic-constructs t)
+    (modus-themes-bold-constructs t)
+    (modus-themes-mixed-fonts t)
+    :config
+    (modus-themes-load-theme 'modus-vivendi-tinted))
+#+end_src
+
+** Nerd Icons
+
+[[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]] allows you to use [[https://github.com/ryanoasis/nerd-fonts][nerd fonts]] in emacs.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    :ensure t)
+#+end_src
+
+[[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] adds nerd icons to [[* Dired][dired]].
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-dired
+    :ensure t
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+[[https://github.com/rainstormstudio/nerd-icons-completion][nerd-icons-completion]] gives [[* Minibuffer][minibuffer]] completions nerd icons.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :ensure t
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+#+end_src
+
+[[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]] adds nerd icons to [[* Corfu][corfu]] completions.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-corfu
+    :ensure t
+    :after corfu
+    :init
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+
+[[https://github.com/seagle0128/nerd-icons-ibuffer][nerd-icons-ibuffer]] display nerd icons in ibuffer.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons-ibuffer
+    :ensure t
+    :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+#+end_src
+
+* Search and navigation
+
+** Consult
+
+[[https://github.com/minad/consult][consult]] provides search and navigation commands based on the built-in completion system.
+
+#+begin_src emacs-lisp
+  (use-package consult
+    :ensure t
+    :bind
+    ([remap switch-to-buffer] . consult-buffer)
+    ([remap yank-pop] . consult-yank-pop)
+    ([remap goto-line] . consult-goto-line)
+    ([remap imenu] . consult-imenu)
+    ([remap isearch-forward] . consult-line)
+    ("C-c M-x" . consult-mode-command)
+    ("C-c m" . consult-man)
+    ("C-c i" . consult-info)
+    ("C-c f" . consult-find)
+    ("C-c g" . consult-grep)
+    ("M-g f" . consult-flymake))
+
+  (use-package consult
+    :after org
+    :bind (
+           :map org-mode-map
+           ([remap imenu] . consult-org-heading)))
+#+end_src
+
+** Avy
+
+[[https://github.com/abo-abo/avy][avy]] helps with in buffer navigation, allowing you to jump to visible text using a char decision tree.
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :ensure t
+    :custom
+    (avy-timeout-seconds 0.3)
+    :bind
+    ("M-s" . avy-goto-char-timer))
+#+end_src
+
+* Indentation
+
+Specifies TAB behaviour: Try to complete, then indent 4 spaces (not tabs).
+
+#+begin_src emacs-lisp
+  (setopt tab-always-indent 'complete
+          tab-width 4
+          indent-tabs-mode nil)
+#+end_src
+
+* Completion
+
+** Ignore case
+
+Ignore case when completing.
+
+#+begin_src emacs-lisp
+  (setopt completion-ignore-case t
+          read-file-name-completion-ignore-case t
+          read-buffer-completion-ignore-case t)
+#+end_src
+
+** Orderless Completion Style
+
+[[https://github.com/oantolin/orderless][orderless]] provides an /orderless/ completion style.
+
+#+begin_src emacs-lisp
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(basic substring initials flex orderless))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion))))
+    (completion-pcm-leading-wildcard t)
+    (orderless-smart-case nil))
+#+end_src
+
+** Corfu
+
+[[https://github.com/minad/corfu][Corfu]] enhances in-buffer completion with a small popup.
+
+#+begin_src emacs-lisp
+  (use-package corfu
+      :ensure t
+      :custom
+      (corfu-cycle t)
+      (corfu-auto t)
+      (corfu-auto-prefix 2)
+      (corfu-popupinfo-mode t)
+      (corfu-popupinfo-delay '(1 . 0.5))
+      (text-mode-ispell-word-completion nil)
+      :bind (
+             ;; popup controls
+             :map corfu-map
+             ("M-p" . corfu-popupinfo-scroll-down)
+             ("M-n" . corfu-popupinfo-scroll-up)
+             ("M-d" . corfu-popupinfo-toggle))
+      :init
+      (global-corfu-mode))
+#+end_src
+
+*** Cape
+
+[[https://github.com/minad/cape][Cape]] provides Completion At Point Extensions which can be used with corfu.
+
+#+begin_src emacs-lisp
+  (use-package cape
+    :ensure t
+    :bind
+    ("C-c p" . cape-prefix-map)
+    :init
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block))
+#+end_src
+
+* Minibuffer
+
+** Recursive minibuffers and save history
+
+Enable recursive minibuffers, depth indicators and savehist mode.
+
+#+begin_src emacs-lisp
+  (setopt enable-recursive-minibuffers t
+          minibuffer-depth-indicate-mode t
+          savehist-mode t)
+#+end_src
+
+** Vertico
+
+[[https://github.com/minad/vertico][vertico]] provides a vertical completion UI for the minibuffer based on the built-in completion system.
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :custom
+    (vertico-cycle t)
+    :init
+    (vertico-mode))
+#+end_src
+
+** Marginalia
+
+[[https://github.com/minad/marginalia][marginalia]] adds anotations to minibuffer completions.
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :ensure t
+    :init
+    (marginalia-mode))
+#+end_src
+
+* Org Mode
+
+Configure [[https://orgmode.org/][Org Mode]].
+
+#+begin_src emacs-lisp
+  (use-package org
+    :bind
+    ("C-c l" . org-store-link)
+    ("C-c a" . org-agenda)
+    ("C-c c" . org-capture)
+    :custom
+    (org-directory "~/org/")
+    (org-agenda-files (list org-directory))
+    (org-log-done 'time)
+    (org-log-into-drawer t)
+    (org-special-ctrl-a/e t)
+    (org-special-ctrl-k t)
+    (org-hide-emphasis-markers t)
+    :hook
+    (org-mode . visual-line-mode)
+    (org-mode . variable-pitch-mode))
+#+end_src
+
+* Dired
+
+Configure dired.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :commands (dired)
+    :custom
+    (dired-recursive-copies 'always)
+    (dired-recursive-deletes 'always)
+    (dired-dwim-target t)
+    (dired-listing-switches "-lFahv --group-directories-first")
+    :hook
+    (dired-mode . dired-hide-details-mode)
+    (dired-mode . hl-line-mode))
+#+end_src
+
+** dired-subtree
+
+[[https://github.com/Fuco1/dired-hacks/?tab=readme-ov-file#dired-subtree][dired-subtree]] allows you to view the content of a directory without opening a separate buffer.
+
+#+begin_src emacs-lisp
+  (use-package dired-subtree
+    :ensure t
+    :after dired
+    :bind (
+  	     :map dired-mode-map
+  	     ("<tab>" . dired-subtree-toggle)
+  	     ("TAB" . dired-subtree-toggle))
+    :custom
+    (dired-subtree-use-backgrounds nil))
+#+end_src
+
+* Ibuffer
+
+Use ~ibuffer~ instead off default ~list-buffers~. The ~M-o~ unbinding in ~ibuffer-mode-map~ is needed for ~ace-window~ to work within ~ibuffer-mode~ buffers.
+
+#+begin_src emacs-lisp
+  (use-package ibuffer
+    :bind (
+           ([remap list-buffers] . ibuffer)
+           :map ibuffer-mode-map
+           ("M-o" . nil)
+           ))
+#+end_src
+
+* Development
+
+Display relative line numbers when in programming modes, enable auto pair pairing and subword movement and editing (good to work with camelCase).
+
+#+begin_src emacs-lisp
+  (use-package emacs
+    :custom
+    (display-line-numbers-type 'relative)
+    :hook
+    (prog-mode . display-line-numbers-mode)
+    (prog-mode . electric-pair-mode)
+    (prog-mode . subword-mode))
+#+end_src
+
+** Tree Sitter
+
+[[https://tree-sitter.github.io/tree-sitter/][Tree-sitter]] is a parser generator tool and incremental parser lib.
+
+#+begin_src emacs-lisp
+  (use-package treesit
+    :custom
+    (treesit-font-lock-level 4)
+    (major-mode-remap-alist
+     '((sh-mode . bash-ts-mode)
+       (c-mode . c-ts-mode)
+       (c++-mode . c++-ts-mode)
+       (html-mode . html-ts-mode)
+       (mhtml-mode . html-ts-mode)
+       (css-mode . css-ts-mode)
+       (js-mode . js-ts-mode)
+       (javascript-mode . js-ts-mode)
+       (python-mode . python-ts-mode))))
+#+end_src
+
+*** Expreg
+
+[[https://elpa.gnu.org/packages/expreg.html][Expreg]] increases selected region by semantic units using tree-sitter.
+
+#+begin_src emacs-lisp
+  (use-package expreg
+    :ensure t
+    :bind
+    ("C-=" . expreg-expand)
+    ("C-+" . expreg-contract))
+#+end_src
+
+** Eglot
+
+Set eglot language servers as described in [[file:README.org][README.org]].
+
+#+begin_src emacs-lisp
+  (use-package eglot
+    :custom
+    (eglot-server-programs
+     '((bash-ts-mode "bash-language-server" "start")
+       ((c-ts-mode c++-ts-mode) "clangd")
+       (html-ts-mode "vscode-html-language-server" "--stdio")
+       (css-ts-mode "vscode-css-language-server" "--stdio")
+       (js-ts-mode "typescript-language-server" "--stdio")
+       (python-ts-mode "pyright-langserver" "--stdio")))
+    :hook
+    (python-ts-mode . eglot-ensure)
+    ((c-ts-mode c++-ts-mode) . eglot-ensure)
+    (html-ts-mode . eglot-ensure)
+    (css-ts-mode . eglot-ensure)
+    (js-ts-mode . eglot-ensure))
+#+end_src
+
+** Web Dev
+
+Unbind ~M-o~ in ~html-ts-mode-map~ for ~ace-window~ to work in ~html-ts-mode~ buffers.
+
+#+begin_src emacs-lisp
+  (use-package html-ts-mode
+    :bind (
+           :map html-ts-mode-map
+           ("M-o" . nil)))
+#+end_src
+
+*** Emmet
+
+[[https://github.com/smihica/emmet-mode][emmet-mode]] allows you to use [[https://emmet.io/][emmet]] in emacs.
+
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :ensure t
+    :hook
+    (html-ts-mode . emmet-mode))
+#+end_src
+
+* Magit
+
+[[https://magit.vc/][Magit]] is a complete interface to git inside emacs.
+
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :commands magit-status)
+#+end_src
+
+* Vterm
+
+[[https://github.com/akermu/emacs-libvterm][vterm]] is a fast and fully capable terminal emulator inside emacs.
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :ensure t
+    :defer t)
+#+end_src
+
+** Multi Vterm
+
+[[https://github.com/suonlight/multi-vterm][multi-vterm]] allows you to manage multiple vterm buffers.
+
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+  :ensure t
+  :custom
+  (multi-vterm-dedicated-window-height-percent 30)
+  :bind
+  ("C-;" . multi-vterm-dedicated-toggle))
+#+end_src
+
+* Helpful
+
+[[https://github.com/Wilfred/helpful][Helpful]] is an alternative to emacs built-in help commands that provides more information.
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :ensure t
+    :bind
+    ([remap describe-function] . helpful-callable)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-key] . helpful-key)
+    ([remap describe-command] . helpful-command))
+#+end_src
+
+* Which key
+
+~which-key~ displays key bindings following prefix commands.
+
+#+begin_src emacs-lisp
+  (use-package which-key
+    :custom
+    (which-key-idle-delay 0.3)
+    :init
+    (which-key-mode))
+#+end_src
+
