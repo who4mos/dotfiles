@@ -489,6 +489,7 @@ Set eglot language servers as described in [[file:README.org][README.org]].
        (css-ts-mode "vscode-css-language-server" "--stdio")
        (js-ts-mode "typescript-language-server" "--stdio")
        (python-ts-mode "pyright-langserver" "--stdio")))
+    (eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
     :hook
     (python-ts-mode . eglot-ensure)
     ((c-ts-mode c++-ts-mode) . eglot-ensure)
