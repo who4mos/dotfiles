@@ -32,7 +32,6 @@ Then open the [[file:emacs.org][emacs.org]] in emacs and tangle it (~C-c C-v C-t
 
 - ~Noto Color Emoji~ (emojis)
 - ~Hack Nerd Font~ (default and fixed-pitch)
-- ~Source Sans Pro~ (variable-pitch)
 
 ** Language Servers
 
