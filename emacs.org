@@ -508,6 +508,15 @@ Set eglot language servers as described in [[file:README.org][README.org]].
     :ensure t)
 #+end_src
 
+** Python Venvs
+
+[[https://github.com/jorgenschaefer/pyvenv][pyvenv]] adds support for python virtual environments.
+
+#+begin_src emacs-lisp
+  (use-package pyvenv
+    :ensure t)
+#+end_src
+
 ** Web Dev
 
 Unbind ~M-o~ in ~html-ts-mode-map~ for ~ace-window~ to work in ~html-ts-mode~ buffers. [[https://github.com/smihica/emmet-mode][emmet-mode]] allows you to use [[https://emmet.io/][emmet]] in emacs.
